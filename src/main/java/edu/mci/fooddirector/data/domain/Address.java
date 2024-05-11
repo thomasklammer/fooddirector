@@ -1,4 +1,4 @@
-package edu.mci.fooddirector.data;
+package edu.mci.fooddirector.data.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;

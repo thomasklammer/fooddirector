@@ -1,5 +1,7 @@
-package edu.mci.fooddirector.data;
+package edu.mci.fooddirector.data.domain;
 
+import edu.mci.fooddirector.data.enums.OrderStatus;
+import edu.mci.fooddirector.data.enums.PaymentMethod;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
