@@ -21,6 +21,11 @@ public class Order extends AbstractEntity {
     private OrderStatus orderStatus;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "deliveryaddress_id")
     @NotNull
     private Address deliveryAddress;
