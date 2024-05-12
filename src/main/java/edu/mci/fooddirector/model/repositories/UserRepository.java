@@ -1,6 +1,6 @@
-package edu.mci.fooddirector.data.repositories;
+package edu.mci.fooddirector.model.repositories;
 
-import edu.mci.fooddirector.data.domain.User;
+import edu.mci.fooddirector.model.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

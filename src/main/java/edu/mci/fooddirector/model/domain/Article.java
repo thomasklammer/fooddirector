@@ -1,6 +1,6 @@
-package edu.mci.fooddirector.data.domain;
+package edu.mci.fooddirector.model.domain;
 
-import edu.mci.fooddirector.data.enums.ArticleCategory;
+import edu.mci.fooddirector.model.enums.ArticleCategory;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.Max;

@@ -1,4 +1,4 @@
-package edu.mci.fooddirector.data.domain;
+package edu.mci.fooddirector.model.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

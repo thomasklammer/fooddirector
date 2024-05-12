@@ -1,8 +1,8 @@
-package edu.mci.fooddirector.services;
+package edu.mci.fooddirector.model.services;
 
-import edu.mci.fooddirector.data.domain.Order;
-import edu.mci.fooddirector.data.repositories.OrderDetailRepository;
-import edu.mci.fooddirector.data.repositories.OrderRepository;
+import edu.mci.fooddirector.model.domain.Order;
+import edu.mci.fooddirector.model.repositories.OrderDetailRepository;
+import edu.mci.fooddirector.model.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
 

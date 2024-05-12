@@ -1,4 +1,4 @@
-package edu.mci.fooddirector.data.enums;
+package edu.mci.fooddirector.model.enums;
 
 public enum ArticleCategory {
     Starter,

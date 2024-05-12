@@ -1,7 +1,7 @@
-package edu.mci.fooddirector.services;
+package edu.mci.fooddirector.model.services;
 
-import edu.mci.fooddirector.data.domain.User;
-import edu.mci.fooddirector.data.repositories.UserRepository;
+import edu.mci.fooddirector.model.domain.User;
+import edu.mci.fooddirector.model.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package edu.mci.fooddirector.data.domain;
+package edu.mci.fooddirector.model.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
