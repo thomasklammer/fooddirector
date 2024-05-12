@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class User extends AbstractEntity {
+public class Account extends AbstractEntity {
 
     @Email
     @NotEmpty

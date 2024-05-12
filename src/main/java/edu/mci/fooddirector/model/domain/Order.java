@@ -23,7 +23,7 @@ public class Order extends AbstractEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @NotNull
-    private User user;
+    private Account user;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "deliveryaddress_id")
