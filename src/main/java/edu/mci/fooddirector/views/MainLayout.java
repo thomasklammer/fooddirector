@@ -50,6 +50,7 @@ public class MainLayout extends AppLayout {
 
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
+        nav.addClassNames("side-nav");
 
         nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
         nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
@@ -57,18 +58,14 @@ public class MainLayout extends AppLayout {
         return nav;
     }
 
-    private Footer createFooter() {
-
+    private void createFooter() {
         Div div = new Div();
         div.addClassNames("footer");
 
         Footer footer = new Footer();
         footer.add(div);
         addToNavbar(false, footer);
-
-        return footer;
     }
-
 
     @Override
     protected void afterNavigation() {

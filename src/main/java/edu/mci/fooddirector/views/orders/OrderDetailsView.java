@@ -61,11 +61,11 @@ public class OrderDetailsView extends Div{
         OrderNumber.setClassName("custom-span");
         Span OrderDate = new Span("Bestelldatum: " + " 01.01.2021");
         OrderDate.setClassName("custom-span");
-        Span OrderStatus = new Span("Status: " + "In Bearbeitung");
+        Span OrderStatus = new Span("Lieferadresse: " + "Musterstraße1");
         OrderStatus.setClassName("custom-span");
-        Span OrderPayment = new Span("bezahlt mit " + "Paypal");
+        Span OrderPayment = new Span("Preis " + "20€");
         OrderPayment.setClassName("custom-span");
-        Span OrderArticles = new Span("Kebab, Pommes, Cola");
+        Span OrderArticles = new Span("Mwst." + "20%");
         OrderArticles.setClassName("custom-span");
 
         Header.add(OrderNumber);
