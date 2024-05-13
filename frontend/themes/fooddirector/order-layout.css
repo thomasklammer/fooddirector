@@ -1,0 +1,19 @@
+.custom-button {
+    color: white;
+    transition: color 0.3s;
+    background-color: black;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    border-radius: 10px;
+    font-size: 24px;
+}
+
+.custom-button:hover {
+    background-color: darkorange;
+}
+
+.custom-border {
+    border: 2px solid grey;
+    border-radius: 10px;
+    background-color: #FBF7EF;
+}

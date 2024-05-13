@@ -15,6 +15,7 @@ import edu.mci.fooddirector.views.MainLayout;
 @PageTitle("Hello World")
 @Route(value = "hello-world", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
+
 public class HelloWorldView extends HorizontalLayout {
 
     private TextField name;
@@ -48,12 +49,6 @@ public class HelloWorldView extends HorizontalLayout {
             }catch(Exception ex) {
                 System.out.println(ex.getMessage());
             }
-
-
-
-
-
-
 
         });
         sayHello.addClickShortcut(Key.ENTER);

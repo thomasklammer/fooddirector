@@ -12,6 +12,7 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.helloworld.HelloWorldView;
+import edu.mci.fooddirector.views.orders.OrdersView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -51,14 +52,15 @@ public class MainLayout extends AppLayout {
         SideNav nav = new SideNav();
 
         nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
+        nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
 
         return nav;
     }
 
     private Footer createFooter() {
-        Footer layout = new Footer();
 
-        return layout;
+
+        return new Footer();
     }
 
     @Override
