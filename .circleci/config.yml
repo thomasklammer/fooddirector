@@ -22,10 +22,6 @@ jobs:
             - store_artifacts:
                 path: target
                 destination: target
-        filters:
-          branches:
-            only:
-              - main
                 
     test:
         docker:
@@ -38,7 +34,7 @@ jobs:
                 destination: reports   
          
     build_push_image_gcr:
-            
+
         description: Build docker image and push to gcr registry
         executor: gcp-gcr/default
         machine:
@@ -85,7 +81,10 @@ workflows:
   version: 2
   workflow:
     jobs:
-    - build
+    - build:
+        filters:
+          branches:
+            only: main
     - test:
           requires:
             - build
