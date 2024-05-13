@@ -1,11 +1,10 @@
 package edu.mci.fooddirector.views;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
@@ -26,6 +25,7 @@ public class MainLayout extends AppLayout {
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
+        createFooter();
     }
 
     private void addHeaderContent() {
@@ -45,7 +45,7 @@ public class MainLayout extends AppLayout {
 
         Scroller scroller = new Scroller(createNavigation());
 
-        addToDrawer(header, scroller, createFooter());
+        addToDrawer(header, scroller);
     }
 
     private SideNav createNavigation() {
@@ -59,9 +59,16 @@ public class MainLayout extends AppLayout {
 
     private Footer createFooter() {
 
+        Div div = new Div();
+        div.addClassNames("footer");
 
-        return new Footer();
+        Footer footer = new Footer();
+        footer.add(div);
+        addToNavbar(false, footer);
+
+        return footer;
     }
+
 
     @Override
     protected void afterNavigation() {
