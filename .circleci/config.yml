@@ -22,6 +22,10 @@ jobs:
             - store_artifacts:
                 path: target
                 destination: target
+        filters:
+          branches:
+            only:
+              - main
                 
     test:
         docker:
