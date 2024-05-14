@@ -50,6 +50,7 @@ public class OrderDetailsView extends Div implements BeforeEnterObserver {
                 layout.add(new Span("Bestelldatum: " + selectedOrder.getOrderDate().format(formatter)));
                 layout.add(new Span("Lieferadresse: " + selectedOrder.getDeliveryAddress().getCity() + " " + selectedOrder.getDeliveryAddress().getStreet() + " " + selectedOrder.getDeliveryAddress().getHouseNumber()));
                 layout.add(new Span("Bezahlmethode: " + selectedOrder.getPaymentMethod()));
+                layout.add(new Span ("Gesamtsumme: " +  "€ " +selectedOrder.getOrderValue()));
 
                 Grid<OrderDetail> grid = new Grid<>();
                 grid.setItems(selectedOrder.getOrderDetails());

@@ -6,12 +6,14 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.cart.CartView;
 import edu.mci.fooddirector.views.helloworld.HelloWorldView;
+import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
@@ -88,8 +90,14 @@ public class MainLayout extends AppLayout {
         SideNav adminNav = new SideNav();
         adminNav.setLabel("Admin");
         adminNav.setCollapsible(true);
-        adminNav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        adminNav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
+
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        ordersNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(ordersNavItem);
+
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        reportNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(reportNavItem);
 
         return adminNav;
     }
