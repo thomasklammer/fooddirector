@@ -1,0 +1,15 @@
+.cart aside {
+    top: calc(var(--lumo-space-xl) + var(--_vaadin-app-layout-navbar-offset-size));
+}
+
+
+.cart-grid {
+    display: grid;
+    width: 100%
+}
+
+@media (min-width: 1024px) {
+    .cart-grid  {
+        grid-template-columns: 1fr 500px;
+    }
+}
