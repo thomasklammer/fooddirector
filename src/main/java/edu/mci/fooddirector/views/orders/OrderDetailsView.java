@@ -18,10 +18,12 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class OrderDetailsView extends Div{
 
     public OrderDetailsView(){
+
         VerticalLayout layout = new VerticalLayout();
+        layout.setSpacing(false);
 
         layout.setWidth("auto");
-        layout.setMargin(true);
+        layout.setMargin(false);
         layout.setAlignItems(FlexComponent.Alignment.STRETCH);
 
         layout.add(addOrderDetail());
@@ -50,6 +52,7 @@ public class OrderDetailsView extends Div{
     private Div addOrderDetail(){
 
         VerticalLayout innerlayout = new VerticalLayout();
+        innerlayout.setSpacing(false);
 
         HorizontalLayout Header = new HorizontalLayout();
         HorizontalLayout Row2 = new HorizontalLayout();

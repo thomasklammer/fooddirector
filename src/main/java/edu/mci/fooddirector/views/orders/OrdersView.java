@@ -1,17 +1,35 @@
 package edu.mci.fooddirector.views.orders;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.selection.SingleSelect;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import edu.mci.fooddirector.model.domain.Account;
+import edu.mci.fooddirector.model.domain.Address;
+import edu.mci.fooddirector.model.domain.Order;
+import edu.mci.fooddirector.model.domain.OrderDetail;
+import edu.mci.fooddirector.model.enums.OrderStatus;
+import edu.mci.fooddirector.model.enums.PaymentMethod;
+import edu.mci.fooddirector.model.repositories.OrderDetailRepository;
+import edu.mci.fooddirector.model.repositories.OrderRepository;
+import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
 import org.hibernate.annotations.processing.Find;
 import org.vaadin.lineawesome.LineAwesomeIcon;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 
 @PageTitle("Bestellungen")
@@ -19,78 +37,77 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 
 public class OrdersView extends Div {
 
-    public OrdersView(){
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
+
+    public OrdersView(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository){
+
         VerticalLayout layout = new VerticalLayout();
+        layout.setSpacing(false);
 
-        layout.setWidth("auto");
-        layout.setMargin(true);
-        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        Address address1 = new Address();
+        address1.setId(1L);
+        address1.setCity("Wien");
+        address1.setStreet("Teststraße");
+        address1.setHouseNumber("1");
+        address1.setZipCode("1010");
+        address1.setAdditionalInfo("Top 1");
 
-        layout.add(addOrderDetail());
-        layout.add(addOrderDetail());
-        layout.add(addOrderDetail());
+        Account user1 = new Account();
+        user1.setId(2L);
+        user1.setFirstName("Sepp");
+        user1.setLastName("Müller");
+        user1.setEmail("test@test.at");
+        user1.setPassword("test");
+        user1.setDeliveryAddress(address1);
 
-        Button Btn_orderDetail = new Button("Details");
-        Btn_orderDetail.setClassName("custom-button");
-        Btn_orderDetail.setIcon(LineAwesomeIcon.INFO_CIRCLE_SOLID.create());
-        Btn_orderDetail.addClickListener(
+        Order order1 = new Order();
+        order1.setId(3L);
+        order1.setOrderDate(LocalDateTime.now());
+        order1.setOrderStatus(OrderStatus.Confirmed);
+        order1.setPaymentMethod(PaymentMethod.PayPal);
+        order1.setDeliveryAddress(address1);
+
+        OrderService orderService = new OrderService(orderRepository,orderDetailRepository);
+        orderService.saveOrder(order1);
+
+        List<Order> orders = orderService.findAll();
+
+        Grid<Order> grid = new Grid<>();
+        grid.setItems(orders);
+        grid.addColumn(Order::getId).setHeader("ID");
+        grid.addColumn(Order::getOrderDate).setHeader("Bestelldatum");
+        grid.addColumn(Order::getOrderDetails).setHeader("Artikel");
+        grid.addColumn(Order::getOrderStatus).setHeader("Status");
+
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        SingleSelect<Grid<Order>, Order> orderSelect =
+                grid.asSingleSelect();
+
+        orderSelect.addValueChangeListener(e -> {
+            Order selectedPerson = e.getValue();
+        });
+
+        grid.addItemClickListener(
                 e -> UI.getCurrent().navigate(OrderDetailsView.class)
         );
 
-        HorizontalLayout layoutBtnDetail = new HorizontalLayout();
-        layoutBtnDetail.setAlignItems(FlexComponent.Alignment.END);
-        layoutBtnDetail.add(Btn_orderDetail);
-        layout.add(layoutBtnDetail);
+        layout.add(grid);
+
+        layout.setWidth("auto");
+        layout.setMargin(false);
+        layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+
 
         Div container = new Div();
         container.add(layout);
-        layout.add(Btn_orderDetail);
 
         setClassName("OrdersView");
         container.setClassName("OrdersViewContainer");
 
         add(container);
-    }
-
-    private Div addOrderDetail(){
-
-        VerticalLayout innerlayout = new VerticalLayout();
-
-        HorizontalLayout Header = new HorizontalLayout();
-        HorizontalLayout Row2 = new HorizontalLayout();
-        HorizontalLayout Row3 = new HorizontalLayout();
-        Row3.setAlignItems(FlexComponent.Alignment.END);
-
-        //Content
-        Span OrderNumber = new Span("Bestellnummer: " + "123456");
-        OrderNumber.setClassName("custom-span");
-        Span OrderDate = new Span("Bestelldatum: " + " 01.01.2021");
-        OrderDate.setClassName("custom-span");
-        Span OrderStatus = new Span("Status: " + "In Bearbeitung");
-        OrderStatus.setClassName("custom-span");
-        Span OrderPayment = new Span("bezahlt mit " + "Paypal");
-        OrderPayment.setClassName("custom-span");
-        Span OrderArticles = new Span("Kebab, Pommes, Cola");
-        OrderArticles.setClassName("custom-span");
-
-        Header.add(OrderNumber);
-        Header.add(OrderDate);
-        Row2.add(OrderStatus);
-
-        Row3.add(OrderArticles);
-        Row3.add(OrderPayment);
-
-        innerlayout.add(Header);
-        innerlayout.add(Row2);
-        innerlayout.add(Row3);
-
-
-        //Stylesheet
-        Div borderedDiv = new Div(innerlayout);
-        borderedDiv.setClassName("custom-border");
-
-        return borderedDiv;
-
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
 }
