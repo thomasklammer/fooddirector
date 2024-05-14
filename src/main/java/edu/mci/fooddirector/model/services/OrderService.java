@@ -4,6 +4,7 @@ import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.repositories.OrderDetailRepository;
 import edu.mci.fooddirector.model.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -36,5 +37,10 @@ public class OrderService {
 
     public void saveOrder(Order order) {
         orderRepository.save(order);
+    }
+
+    @Transactional
+    public Order findOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElse(null);
     }
 }

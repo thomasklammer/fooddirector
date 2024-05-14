@@ -17,41 +17,21 @@ import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+
 
 
 @PageTitle("Bestellungen")
 @Route(value = "orders", layout = MainLayout.class)
 
 public class OrdersView extends Div {
+    public static int i;
 
     public OrdersView(OrderService orderService){
 
         VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(false);
-
-        Address address1 = new Address();
-        address1.setCity("Wien");
-        address1.setStreet("Teststraße");
-        address1.setHouseNumber("1");
-        address1.setZipCode("1010");
-        address1.setAdditionalInfo("Top 1");
-
-        User user1 = new User();
-        user1.setFirstName("Sepp");
-        user1.setLastName("Müller");
-        user1.setEmail("test@test.at");
-        user1.setPassword("test");
-        user1.setDeliveryAddress(address1);
-
-        Order order1 = new Order();
-        order1.setOrderDate(LocalDateTime.now());
-        order1.setOrderStatus(OrderStatus.Confirmed);
-        order1.setPaymentMethod(PaymentMethod.PayPal);
-        order1.setDeliveryAddress(address1);
-        order1.setUser(user1);
-
-        orderService.saveOrder(order1);
 
         List<Order> orders = orderService.findAll();
 
@@ -61,18 +41,12 @@ public class OrdersView extends Div {
         grid.addColumn(Order::getOrderDate).setHeader("Bestelldatum");
         grid.addColumn(Order::getOrderDetails).setHeader("Artikel");
         grid.addColumn(Order::getOrderStatus).setHeader("Status");
-
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
-        SingleSelect<Grid<Order>, Order> orderSelect =
-                grid.asSingleSelect();
 
-        orderSelect.addValueChangeListener(e -> {
-            Order selectedPerson = e.getValue();
+        grid.addItemClickListener(event -> {
+            Order selectedOrder = event.getItem();
+            UI.getCurrent().navigate("order-details/" + selectedOrder.getId());
         });
-
-        grid.addItemClickListener(
-                e -> UI.getCurrent().navigate(OrderDetailsView.class)
-        );
 
         layout.add(grid);
 
