@@ -1,17 +1,17 @@
 package edu.mci.fooddirector.views;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.helloworld.HelloWorldView;
+import edu.mci.fooddirector.views.orders.OrdersView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -25,6 +25,7 @@ public class MainLayout extends AppLayout {
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
+        createFooter();
     }
 
     private void addHeaderContent() {
@@ -44,21 +45,26 @@ public class MainLayout extends AppLayout {
 
         Scroller scroller = new Scroller(createNavigation());
 
-        addToDrawer(header, scroller, createFooter());
+        addToDrawer(header, scroller);
     }
 
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
+        nav.addClassNames("side-nav");
 
         nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
+        nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
 
         return nav;
     }
 
-    private Footer createFooter() {
-        Footer layout = new Footer();
+    private void createFooter() {
+        Div div = new Div();
+        div.addClassNames("footer");
 
-        return layout;
+        Footer footer = new Footer();
+        footer.add(div);
+        addToNavbar(false, footer);
     }
 
     @Override

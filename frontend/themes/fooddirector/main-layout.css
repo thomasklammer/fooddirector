@@ -18,3 +18,20 @@ vaadin-side-nav-item vaadin-icon {
 [slot="drawer"]:is(header, footer):is(:empty) {
   display: none;
 }
+
+.footer {
+  width: 100vw;
+  height: 100px;
+  background-color: #2C2E33;
+  color: black;
+  text-align: center;
+  font-size: 16px;
+  bottom: 0;
+  position: fixed;
+}
+
+.side-nav {
+  background-color: #FBF7EF;
+  color: #2C2E33;
+  font-weight: bold;
+}

@@ -8,13 +8,14 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import edu.mci.fooddirector.model.domain.Address;
-import edu.mci.fooddirector.model.domain.Account;
+import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.views.MainLayout;
 
 @PageTitle("Hello World")
 @Route(value = "hello-world", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
+
 public class HelloWorldView extends HorizontalLayout {
 
     private TextField name;
@@ -26,7 +27,7 @@ public class HelloWorldView extends HorizontalLayout {
         sayHello.addClickListener(e -> {
 
             try {
-                var user = new Account();
+                var user = new User();
                 user.setFirstName("Thomas");
                 user.setLastName("Klammer");
                 user.setEmail("thomasklammer.1993@gmail.com");
@@ -48,12 +49,6 @@ public class HelloWorldView extends HorizontalLayout {
             }catch(Exception ex) {
                 System.out.println(ex.getMessage());
             }
-
-
-
-
-
-
 
         });
         sayHello.addClickShortcut(Key.ENTER);
