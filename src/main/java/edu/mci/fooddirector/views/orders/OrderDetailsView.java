@@ -45,7 +45,7 @@ public class OrderDetailsView extends Div implements BeforeEnterObserver {
 
                 // Add order details
                 for (OrderDetail orderDetail : selectedOrder.getOrderDetails()) {
-                    layout.add(new Span(orderDetail.getAmount() + "x " + orderDetail.getArticleId() + " - " + orderDetail.getNote()));
+                    layout.add(new Span(orderDetail.getAmount() + "x " + orderDetail.getArticle() + " - " + orderDetail.getNote()));
                 }
 
                 addBackButton();

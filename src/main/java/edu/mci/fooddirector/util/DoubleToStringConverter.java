@@ -8,6 +8,7 @@ public  class DoubleToStringConverter {
         Locale locale = Locale.getDefault();
         NumberFormat numberFormat = NumberFormat.getInstance(locale);
         numberFormat.setMaximumFractionDigits(2);
+        numberFormat.setMinimumFractionDigits(2);
         String formattedNumber = numberFormat.format(value);
 
         return formattedNumber + " €";

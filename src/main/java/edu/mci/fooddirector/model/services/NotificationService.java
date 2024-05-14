@@ -10,7 +10,7 @@ public class NotificationService {
         Notification notification = new Notification(
                 message,
                 3000,
-                Notification.Position.TOP_START
+                Notification.Position.BOTTOM_END
         );
         notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
         notification.open();
@@ -20,7 +20,7 @@ public class NotificationService {
         Notification notification = new Notification(
                 message,
                 3000,
-                Notification.Position.TOP_START
+                Notification.Position.BOTTOM_END
         );
         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         notification.open();
@@ -30,7 +30,7 @@ public class NotificationService {
         Notification notification = new Notification(
                 message,
                 3000,
-                Notification.Position.TOP_START
+                Notification.Position.BOTTOM_END
         );
         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         notification.open();

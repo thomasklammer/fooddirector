@@ -1,22 +1,25 @@
 package edu.mci.fooddirector.views.cart;
 
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import edu.mci.fooddirector.model.callbacks.CartCallback;
-import edu.mci.fooddirector.model.domain.Cart;
-import edu.mci.fooddirector.model.domain.CartItem;
-import edu.mci.fooddirector.model.enums.ArticleCategory;
+import edu.mci.fooddirector.model.domain.*;
+import edu.mci.fooddirector.model.enums.OrderStatus;
+import edu.mci.fooddirector.model.enums.PaymentMethod;
 import edu.mci.fooddirector.model.services.CartService;
 import edu.mci.fooddirector.model.services.NotificationService;
+import edu.mci.fooddirector.model.services.OrderService;
+import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
+import edu.mci.fooddirector.views.LoginView;
 import edu.mci.fooddirector.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -42,9 +45,9 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
+import edu.mci.fooddirector.views.RegistrationView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @PageTitle("Warenkorb | Fooddirector")
@@ -52,21 +55,41 @@ import java.util.ArrayList;
 public class CartView extends VerticalLayout {
 
 
-    Main content;
-    Cart cart = new Cart();
+    private Main content;
+    private Cart cart = new Cart();
 
-    CartService cartService;
-    NotificationService notificationService;
-
-
-    UnorderedList summaryList;
-    Section cartItemsList;
+    private final CartService cartService;
+    private final NotificationService notificationService;
+    private final OrderService orderService;
+    private final UserService userService;
 
 
-    public CartView(CartService cartService, NotificationService notificationService) {
+    private UnorderedList summaryList;
+    private Section cartItemsList;
+
+    private Binder<Address> addressBinder;
+    private String selectedPaymentMethod;
+
+    private User currentUser;
+
+
+    public CartView(CartService cartService,
+                    NotificationService notificationService,
+                    OrderService orderService,
+                    UserService userService) {
         this.cartService = cartService;
         this.notificationService = notificationService;
+        this.orderService = orderService;
+        this.userService = userService;
 
+        var user = userService.getCurrentUser();
+
+        if(user.isEmpty()) {
+            UI.getCurrent().navigate(LoginView.class);
+            return;
+        } else {
+            currentUser = user.get();
+        }
 
         addClassNames("cart");
         content = new Main();
@@ -78,7 +101,7 @@ public class CartView extends VerticalLayout {
         add(header);
         add(content);
 
-        cartService.getCart(cart ->  {
+        cartService.getCart(cart -> {
             this.cart = cart;
 
             cartItemsList = createItemsList();
@@ -107,7 +130,7 @@ public class CartView extends VerticalLayout {
         UnorderedList ul = new UnorderedList();
         ul.addClassNames(ListStyleType.NONE, Margin.NONE, Padding.NONE, Display.FLEX, FlexDirection.COLUMN, Gap.MEDIUM);
 
-        for(var cartItem : cart.getCartItems()) {
+        for (var cartItem : cart.getCartItems()) {
             ul.add(createListItem(cartItem));
         }
 
@@ -151,8 +174,8 @@ public class CartView extends VerticalLayout {
         summaryList.removeAll();
 
         summaryList.add(createSummaryListItem("Zwischensumme", DoubleToStringConverter.ConvertToCurrency(cart.getPrice()), false));
-        summaryList.add(createSummaryListItem("Lieferung",  DoubleToStringConverter.ConvertToCurrency(cart.getDeliveryCosts()), false));
-        summaryList.add(createSummaryListItem("Gesamt (inkl. MwSt.)",  DoubleToStringConverter.ConvertToCurrency(cart.getTotalPrice()), true));
+        summaryList.add(createSummaryListItem("Lieferung", DoubleToStringConverter.ConvertToCurrency(cart.getDeliveryCosts()), false));
+        summaryList.add(createSummaryListItem("Gesamt (inkl. MwSt.)", DoubleToStringConverter.ConvertToCurrency(cart.getTotalPrice()), true));
     }
 
     private Section createPaymentMethods() {
@@ -161,11 +184,21 @@ public class CartView extends VerticalLayout {
         H3 header = new H3("Bezahlung");
         header.addClassNames(Margin.Bottom.MEDIUM, FontSize.XXLARGE);
 
-        RadioButtonGroup<String> radioGroup = new RadioButtonGroup<>();
-        radioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        radioGroup.setItems("PayPal", "Kreditkarte", "BitCoin", "Bei Abholung");
+        var paymentMethodsRadioGroup = new RadioButtonGroup<>();
+        paymentMethodsRadioGroup.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+        paymentMethodsRadioGroup.setItems("PayPal", "Kreditkarte", "BitCoin", "Bei Abholung");
 
-        paymentMethods.add(header, radioGroup);
+        paymentMethodsRadioGroup.addValueChangeListener(event -> {
+            var value = event.getValue();
+
+            if (value != null) {
+                selectedPaymentMethod = value.toString();
+            } else {
+                selectedPaymentMethod = null;
+            }
+        });
+
+        paymentMethods.add(header, paymentMethodsRadioGroup);
 
         return paymentMethods;
     }
@@ -177,20 +210,6 @@ public class CartView extends VerticalLayout {
 
         H3 header = new H3("Lieferadresse");
         header.addClassNames(Margin.Bottom.MEDIUM, FontSize.XXLARGE);
-
-
-        //name
-        Div nameSubSection = new Div();
-        nameSubSection.addClassNames(Display.FLEX, FlexWrap.WRAP, Gap.MEDIUM);
-
-        TextField firstName = new TextField("Vorname");
-        firstName.setRequiredIndicatorVisible(true);
-        firstName.addClassNames(Margin.Bottom.SMALL);
-
-        TextField lastName = new TextField("Nachname");
-        lastName.setRequiredIndicatorVisible(true);
-        lastName.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
-        nameSubSection.add(firstName, lastName);
 
 
         //street, housenumber
@@ -219,9 +238,20 @@ public class CartView extends VerticalLayout {
         city.setRequiredIndicatorVisible(true);
         city.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
+
+
+        addressBinder = new Binder<>(Address.class);
+        addressBinder.setBean(currentUser.getDeliveryAddress());
+        addressBinder.forField(postalCode).asRequired("Pflichtfeld").bind(Address::getZipCode, Address::setZipCode);
+        addressBinder.forField(city).asRequired("Pflichtfeld").bind(Address::getCity, Address::setCity);
+        addressBinder.forField(street).asRequired("Pflichtfeld").bind(Address::getStreet, Address::setStreet);
+        addressBinder.forField(houseNumber).asRequired("Pflichtfeld").bind(Address::getHouseNumber, Address::setHouseNumber);
+
+
+
         subSection.add(postalCode, city);
 
-        shippingDetails.add(header, nameSubSection, streetSubSection, subSection);
+        shippingDetails.add(header, streetSubSection, subSection);
         return shippingDetails;
     }
 
@@ -232,6 +262,83 @@ public class CartView extends VerticalLayout {
 
         Button pay = new Button("Jetzt bestellen", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+
+        pay.addClickListener(e -> {
+            if (cart.getCartItems().isEmpty()) {
+                notificationService.showWarning("Es befindet sich nichts im Warenkorb");
+                return;
+            }
+
+            if(selectedPaymentMethod == null || selectedPaymentMethod.isEmpty()) {
+                notificationService.showWarning("Bitte wählen Sie eine Bezahlmethode");
+                return;
+            }
+
+            var paymentMethod = PaymentMethod.PayPal;
+
+            switch(selectedPaymentMethod) {
+                case "Kreditkarte":
+                    paymentMethod = PaymentMethod.CreditCard;
+                    break;
+                case "PayPal":
+                    paymentMethod = PaymentMethod.PayPal;
+                    break;
+                case "BitCoin":
+                    paymentMethod = PaymentMethod.PayPal;
+                    break;
+                case "Bei Abholung":
+                    paymentMethod = PaymentMethod.OnDelivery;
+                    break;
+                default:
+                    notificationService.showWarning("Bitte wählen Sie eine gültige Bezahlmethode");
+                    return;
+            }
+
+
+            addressBinder.validate();
+            if(!addressBinder.isValid()) {
+                return;
+            }
+
+
+            var order = new Order();
+            order.setOrderDate(LocalDateTime.now());
+            order.setOrderStatus(OrderStatus.Confirmed);
+            order.setPaymentMethod(paymentMethod);
+            order.setUser(currentUser);
+
+            var address = addressBinder.getBean();
+
+            var deliveryAddress = new Address();
+            deliveryAddress.setZipCode(address.getZipCode());
+            deliveryAddress.setCity(address.getCity());
+            deliveryAddress.setStreet(address.getStreet());
+            deliveryAddress.setHouseNumber(address.getHouseNumber());
+
+            order.setDeliveryAddress(deliveryAddress);
+
+            var orderDetails = new ArrayList<OrderDetail>();
+            for(var cartItem : cart.getCartItems()) {
+                var orderDetail = new OrderDetail();
+                orderDetail.setAmount(cartItem.getAmount());
+                orderDetail.setArticle(cartItem.getArticle());
+                orderDetail.setTaxRate(cartItem.getArticle().getTaxRate());
+                orderDetail.setNetValue(cartItem.getArticle().getNetPriceDiscounted());
+
+                orderDetails.add(orderDetail);
+            }
+            order.setOrderDetails(orderDetails);
+
+
+            try {
+                orderService.saveOrder(order);
+                UI.getCurrent().navigate(CartSuccessView.class);
+            }
+            catch(Exception ex) {
+                notificationService.showError("Beim Bestellvorgang ist ein Fehler aufgetreten :(");
+            }
+
+        });
 
         footer.add(pay);
         return footer;
@@ -252,13 +359,13 @@ public class CartView extends VerticalLayout {
         item.addClassNames(Display.FLEX, JustifyContent.BETWEEN);
 
         Span headerspan = new Span(header);
-        if(bold) {
+        if (bold) {
             headerspan.addClassNames(LumoUtility.FontWeight.BOLD);
         }
 
         Span priceSpan = new Span(price);
 
-        if(bold) {
+        if (bold) {
             priceSpan.addClassNames(LumoUtility.FontWeight.BOLD);
         }
 
@@ -279,7 +386,8 @@ public class CartView extends VerticalLayout {
         subSection.add(secondarySpan);
 
 
-        Span priceSpan = new Span(DoubleToStringConverter.ConvertToCurrency(cartItem.getArticle().getGrossPriceDiscounted()));
+        var price = cartItem.getArticle().getGrossPriceDiscounted() * cartItem.getAmount();
+        Span priceSpan = new Span(DoubleToStringConverter.ConvertToCurrency(price));
 
         TextField amount = new TextField();
         amount.setWidth("50px");
@@ -303,7 +411,7 @@ public class CartView extends VerticalLayout {
         plusButton.addClickListener(e -> {
             var newAmount = cartItem.getAmount() + 1;
 
-            if(newAmount > 99) {
+            if (newAmount > 99) {
                 notificationService.showWarning("Maximal 99 erlaubt");
                 return;
             }
@@ -312,12 +420,13 @@ public class CartView extends VerticalLayout {
             amount.setValue(String.valueOf(newAmount));
             cartService.setCart(cart);
             updateSummary();
+            recreateCartItems();
         });
 
         minusButton.addClickListener(e -> {
             var newAmount = cartItem.getAmount() - 1;
 
-            if(newAmount < 1) {
+            if (newAmount < 1) {
                 notificationService.showWarning("Menge muss mindestens 1 sein");
                 return;
             }
@@ -326,6 +435,7 @@ public class CartView extends VerticalLayout {
             amount.setValue(String.valueOf(newAmount));
             cartService.setCart(cart);
             updateSummary();
+            recreateCartItems();
         });
 
         removeButton.addClickListener(e -> {

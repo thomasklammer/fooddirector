@@ -48,20 +48,24 @@ public class Article extends AbstractEntity {
         this.name = name;
     }
 
-
     public double getNetPrice() {
         return netPrice;
     }
 
     @JsonIgnore
-    public double getGrossPrice() {
-        return netPrice + (netPrice * taxRate / 100);
+    public double getNetPriceDiscounted() {
+        var netPrice = getNetPrice();
+        return netPrice - (netPrice * discount / 100);
     }
 
     @JsonIgnore
     public double getGrossPriceDiscounted() {
-        var grossPrice = getGrossPrice();
-        return grossPrice - (grossPrice * discount / 100);
+        return getNetPriceDiscounted() + calculateTax(getNetPriceDiscounted());
+    }
+
+    @JsonIgnore
+    private double calculateTax(double value) {
+        return value * getTaxRate() / 100;
     }
 
     public void setNetPrice(double netPrice) {
