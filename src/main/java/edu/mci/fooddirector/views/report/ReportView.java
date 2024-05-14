@@ -18,16 +18,17 @@ import com.vaadin.flow.component.charts.model.style.SolidColor;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import edu.mci.fooddirector.model.services.CartService;
+import edu.mci.fooddirector.model.domain.Order;
+import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -54,8 +55,9 @@ public class ReportView extends VerticalLayout {
         // Create a bar chart
         Chart chart = new Chart(ChartType.COLUMN);
 
-        // Get the current year
+        // Get the current Date
         int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
 
         // Configure the chart
         Configuration conf = chart.getConfiguration();
@@ -92,18 +94,20 @@ public class ReportView extends VerticalLayout {
         }
         //#############################################################################################
 
-        // Sum Monthly Data
+        // Monthly Data
         Number[] monthlySales = new Number[13];
         Number[] monthlyOrders = new Number[13];
-        for (int i = 0; i < 13; i++) {
-            values1[i] = 0;
-
-            for ()
-            values2[i] = 0;
+        for (int month = 0; month < 13; month++) {
+            monthlySales[month] = 0;
+            monthlyOrders[month] = 0;
+            // Sum Amount of monthly Orders
+            List<Order> tmpOrders = orderService.findByMonthAndYear(currentMonth, currentYear);
+            monthlySales[month] = tmpOrders.stream().mapToDouble(Order::getOrderValue).sum();
+            monthlyOrders[month] = (long) tmpOrders.size();
         }
 
         // Create the primary data series
-        ListSeries series1 = new ListSeries("Monatsumsatz (€)", values1);
+        ListSeries series1 = new ListSeries("Monatsumsatz (€)", monthlySales);
         ListSeries series2 = new ListSeries("Bestellungen", values2);
 
         // Set different colors for each series
