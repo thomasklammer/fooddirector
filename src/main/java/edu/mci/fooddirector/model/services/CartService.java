@@ -36,6 +36,18 @@ public class CartService {
 
     }
 
+    public void setCart(Cart cart) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String json = mapper.writeValueAsString(cart);
+            WebStorage.setItem(WebStorage.Storage.SESSION_STORAGE, cartKey, json);
+        } catch (Exception ex) {
+            System.out.println("error while setting cart to storage: " + ex.getMessage());
+            //TODO shit
+        }
+    }
+
     public void addCartItem(Article article) {
         getCart(cart -> {
             var cartItem = new CartItem();
@@ -43,20 +55,7 @@ public class CartService {
             cartItem.setAmount(1);
 
             cart.addCartItem(cartItem);
-
-            ObjectMapper mapper = new ObjectMapper();
-
-            try {
-                String json = mapper.writeValueAsString(cart);
-                WebStorage.setItem(WebStorage.Storage.SESSION_STORAGE, cartKey, json);
-
-            } catch (Exception ex) {
-                //TODO shit
-
-            }
+            setCart(cart);
         });
-
-
-
     }
 }

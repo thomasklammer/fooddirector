@@ -18,7 +18,7 @@ insert into tb_articles(id, name, netprice, taxrate, description, articlecategor
 
 
 insert into tb_orders(id, orderdate, paymentmethod, orderstatus, user_id, deliveryaddress_id) values
-(1, '2024-05-14 16:22:10', 0, 0, 1, 2),
+(1, '2024-04-14 16:22:10', 0, 0, 1, 2),
 (2, '2024-05-14 17:22:10', 2, 1, 1, 3);
 
 

@@ -1,10 +1,12 @@
 package edu.mci.fooddirector.views.cart;
 
 
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -13,6 +15,8 @@ import edu.mci.fooddirector.model.domain.Cart;
 import edu.mci.fooddirector.model.domain.CartItem;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.CartService;
+import edu.mci.fooddirector.model.services.NotificationService;
+import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -48,36 +52,38 @@ import java.util.ArrayList;
 public class CartView extends VerticalLayout {
 
 
-    public CartView(CartService cartService) {
+    Main content;
+    Cart cart = new Cart();
+
+    CartService cartService;
+    NotificationService notificationService;
 
 
-        cartService.getCart(new CartCallback() {
-            @Override
-            public void onCartLoaded(Cart cart) {
-                System.out.println("test");
+    UnorderedList summaryList;
 
-            }
-        });
+
+    public CartView(CartService cartService, NotificationService notificationService) {
+        this.cartService = cartService;
+        this.notificationService = notificationService;
+
 
         addClassNames("cart");
-
+        content = new Main();
+        content.addClassNames("cart-grid", Gap.XLARGE, AlignItems.START, JustifyContent.EVENLY, MaxWidth.FULL);
 
         H2 header = new H2("Warenkorb");
         header.addClassNames(Margin.Bottom.NONE, Margin.Top.NONE, FontSize.XXXLARGE, Margin.Bottom.XLARGE);
 
-        var content = new Main();
-        content.addClassNames("cart-grid", Gap.XLARGE, AlignItems.START, JustifyContent.EVENLY, MaxWidth.FULL);
-        //content.addClassNames(Display.GRID, Gap.XLARGE, AlignItems.START, JustifyContent.EVENLY, MaxWidth.FULL);
-
-        content.add(createItemsList());
-        content.add(createAside());
-
         add(header);
         add(content);
+
+        cartService.getCart(cart ->  {
+            this.cart = cart;
+            content.add(createItemsList());
+            content.add(createAside());
+        });
+
     }
-
-
-
 
 
     private Section createItemsList() {
@@ -92,9 +98,10 @@ public class CartView extends VerticalLayout {
         UnorderedList ul = new UnorderedList();
         ul.addClassNames(ListStyleType.NONE, Margin.NONE, Padding.NONE, Display.FLEX, FlexDirection.COLUMN, Gap.MEDIUM);
 
-        ul.add(createListItem("Vanilla cracker", "With wholemeal flour", "$7.00"));
-        ul.add(createListItem("Vanilla blueberry cake", "With blueberry jam", "$8.00"));
-        ul.add(createListItem("Vanilla pastry", "With wholemeal flour", "$5.00"));
+        for(var cartItem : cart.getCartItems()) {
+            ul.add(createListItem(cartItem));
+        }
+
 
         itemsList.add(headerSection, ul);
 
@@ -122,16 +129,21 @@ public class CartView extends VerticalLayout {
         header.addClassNames(Margin.Bottom.MEDIUM, FontSize.XXLARGE);
 
 
-        UnorderedList ul = new UnorderedList();
-        ul.addClassNames(ListStyleType.NONE, Margin.NONE, Padding.NONE, Display.FLEX, FlexDirection.COLUMN, Gap.MEDIUM);
+        summaryList = new UnorderedList();
+        summaryList.addClassNames(ListStyleType.NONE, Margin.NONE, Padding.NONE, Display.FLEX, FlexDirection.COLUMN, Gap.MEDIUM);
 
-        ul.add(createSummaryListItem("Zwischensumme", "25,90 €", false));
-        ul.add(createSummaryListItem("Lieferung",  "3,00 €", false));
-        ul.add(createSummaryListItem("Gesamt (inkl. MwSt.)",  "28,90 €", true));
+        updateSummary();
 
-
-        summary.add(header, ul);
+        summary.add(header, summaryList);
         return summary;
+    }
+
+    private void updateSummary() {
+        summaryList.removeAll();
+
+        summaryList.add(createSummaryListItem("Zwischensumme", DoubleToStringConverter.ConvertToCurrency(cart.getPrice()), false));
+        summaryList.add(createSummaryListItem("Lieferung",  DoubleToStringConverter.ConvertToCurrency(cart.getDeliveryCosts()), false));
+        summaryList.add(createSummaryListItem("Gesamt (inkl. MwSt.)",  DoubleToStringConverter.ConvertToCurrency(cart.getTotalPrice()), true));
     }
 
     private Section createPaymentMethods() {
@@ -228,7 +240,6 @@ public class CartView extends VerticalLayout {
         aside.addClassNames(Background.CONTRAST_5, BoxSizing.BORDER, Padding.LARGE, BorderRadius.LARGE,
                 Position.STICKY);
 
-
         aside.add(createCheckoutForm());
         return aside;
     }
@@ -252,21 +263,79 @@ public class CartView extends VerticalLayout {
         return item;
     }
 
-    private ListItem createListItem(String primary, String secondary, String price) {
+    private ListItem createListItem(CartItem cartItem) {
         ListItem item = new ListItem();
         item.addClassNames(Display.FLEX, JustifyContent.BETWEEN);
 
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexDirection.COLUMN);
 
-        subSection.add(new Span(primary));
-        Span secondarySpan = new Span(secondary);
+        subSection.add(new Span(cartItem.getArticle().getName()));
+        Span secondarySpan = new Span(cartItem.getArticle().getDescription());
         secondarySpan.addClassNames(FontSize.SMALL, TextColor.SECONDARY);
         subSection.add(secondarySpan);
 
-        Span priceSpan = new Span(price);
 
-        item.add(subSection, priceSpan);
+        Span priceSpan = new Span(DoubleToStringConverter.ConvertToCurrency(cartItem.getArticle().getGrossPriceDiscounted()));
+
+        TextField amount = new TextField();
+        amount.setWidth("50px");
+        amount.setEnabled(false);
+        amount.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
+        amount.setValue(String.valueOf(cartItem.getAmount()));
+
+        Button plusButton = new Button(new Icon(VaadinIcon.PLUS));
+        plusButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        plusButton.setAriaLabel("Menge verringern");
+
+        Button minusButton = new Button(new Icon(VaadinIcon.MINUS));
+        minusButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        minusButton.setAriaLabel("Menge erhöhen");
+
+        Button removeButton = new Button(new Icon(VaadinIcon.TRASH));
+        removeButton.addThemeVariants(ButtonVariant.LUMO_ICON);
+        removeButton.setAriaLabel("Entfernen");
+
+
+        plusButton.addClickListener(e -> {
+            var newAmount = cartItem.getAmount() + 1;
+
+            if(newAmount > 99) {
+                notificationService.showWarning("Maximal 99 erlaubt");
+                return;
+            }
+
+            cartItem.setAmount(newAmount);
+            amount.setValue(String.valueOf(newAmount));
+            cartService.setCart(cart);
+            updateSummary();
+        });
+
+        minusButton.addClickListener(e -> {
+            var newAmount = cartItem.getAmount() - 1;
+
+            if(newAmount < 1) {
+                notificationService.showWarning("Menge muss mindestens 1 sein");
+                return;
+            }
+
+            cartItem.setAmount(newAmount);
+            amount.setValue(String.valueOf(newAmount));
+            cartService.setCart(cart);
+            updateSummary();
+        });
+
+        removeButton.addClickListener(e -> {
+            cart.removeCartItem(cartItem);
+            cartService.setCart(cart);
+            updateSummary();
+        });
+
+
+        var amountLayout = new HorizontalLayout();
+        amountLayout.add(minusButton, amount, plusButton, removeButton);
+
+        item.add(subSection, priceSpan, amountLayout);
         return item;
     }
 }
