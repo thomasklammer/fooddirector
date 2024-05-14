@@ -71,6 +71,10 @@ public class MainLayout extends AppLayout {
 
         String activeClass = "active-nav-item";
 
+        SideNavItem hw = new SideNavItem("HelloWorldView", HelloWorldView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        hw.getElement().getClassList().add(activeClass);
+        nav.addItem(hw);
+
         SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
         cartNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(cartNavItem);

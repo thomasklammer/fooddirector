@@ -44,4 +44,9 @@ public class Cart {
         return getPrice() + getDeliveryCosts();
     }
 
+    @JsonIgnore
+    public boolean isEmpty() {
+        return cartItems.isEmpty();
+    }
+
 }

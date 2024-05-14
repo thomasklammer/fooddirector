@@ -15,6 +15,7 @@ import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.enums.OrderStatus;
 import edu.mci.fooddirector.model.enums.PaymentMethod;
 import edu.mci.fooddirector.model.services.OrderService;
+import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.views.MainLayout;
 
 import java.time.LocalDateTime;
@@ -30,13 +31,14 @@ import java.util.List;
 public class OrdersView extends Div {
     public static int i;
 
-    public OrdersView(OrderService orderService){
+    public OrdersView(OrderService orderService, UserService userService){
 
         VerticalLayout layout = new VerticalLayout();
         layout.setClassName("custom-span");
         layout.setSpacing(false);
 
-        List<Order> orders = orderService.findAllByUserId(1L);
+        var currentUser = userService.getCurrentUser();
+        List<Order> orders = orderService.findAllByUserId(currentUser.get().getId());
 
         Grid<Order> grid = new Grid<>();
         grid.setItems(orders);

@@ -96,7 +96,7 @@ public class CartView extends VerticalLayout {
         content.addClassNames("cart-grid", Gap.XLARGE, AlignItems.START, JustifyContent.EVENLY, MaxWidth.FULL);
 
         H2 header = new H2("Warenkorb");
-        header.addClassNames(Margin.Bottom.NONE, Margin.Top.NONE, FontSize.XXXLARGE, Margin.Bottom.XLARGE);
+
 
         add(header);
         add(content);
@@ -104,9 +104,19 @@ public class CartView extends VerticalLayout {
         cartService.getCart(cart -> {
             this.cart = cart;
 
-            cartItemsList = createItemsList();
-            content.add(cartItemsList);
-            content.add(createAside());
+            if (cart.isEmpty()) {
+                VerticalLayout cartEmptyLayout = new VerticalLayout();
+                cartEmptyLayout.add(new H3("Warenkorb ist leer!"));
+                cartEmptyLayout.add("Leider ist der Warenkorb leer. Schauen Sie auf unsere Speisekarte um feinste Speisen zu entdecken");
+                content.add(cartEmptyLayout);
+
+            } else {
+                cartItemsList = createItemsList();
+                content.add(cartItemsList);
+                content.add(createAside());
+            }
+
+
         });
 
     }
@@ -264,7 +274,7 @@ public class CartView extends VerticalLayout {
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         pay.addClickListener(e -> {
-            if (cart.getCartItems().isEmpty()) {
+            if (cart.isEmpty()) {
                 notificationService.showWarning("Es befindet sich nichts im Warenkorb");
                 return;
             }
@@ -324,6 +334,7 @@ public class CartView extends VerticalLayout {
                 orderDetail.setArticle(cartItem.getArticle());
                 orderDetail.setTaxRate(cartItem.getArticle().getTaxRate());
                 orderDetail.setNetValue(cartItem.getArticle().getNetPriceDiscounted());
+                orderDetail.setOrder(order);
 
                 orderDetails.add(orderDetail);
             }
