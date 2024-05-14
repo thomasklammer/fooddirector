@@ -9,6 +9,8 @@ import edu.mci.fooddirector.model.domain.Cart;
 import edu.mci.fooddirector.model.domain.CartItem;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class CartService {
@@ -20,16 +22,14 @@ public class CartService {
     }
 
     public void getCart(CartCallback cartCallback) {
-
         WebStorage.getItem(WebStorage.Storage.SESSION_STORAGE, cartKey, value -> {
-
-
             ObjectMapper mapper = new ObjectMapper();
             try {
                 Cart cart = mapper.readValue(value, Cart.class);
                 cartCallback.onCartLoaded(cart);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                clearCart();
+                cartCallback.onCartLoaded(new Cart());
             }
 
         });
@@ -37,26 +37,22 @@ public class CartService {
     }
 
     public void addCartItem(Article article) {
+        getCart(cart -> {
+            var cartItem = new CartItem();
+            cartItem.setArticle(article);
+            cartItem.setAmount(1);
 
-        getCart(new CartCallback() {
-            @Override
-            public void onCartLoaded(Cart cart) {
-                var cartItem = new CartItem();
-                cartItem.setArticle(article);
-                cartItem.setAmount(1);
+            cart.addCartItem(cartItem);
 
-                cart.addCartItem(cartItem);
+            ObjectMapper mapper = new ObjectMapper();
 
-                ObjectMapper mapper = new ObjectMapper();
+            try {
+                String json = mapper.writeValueAsString(cart);
+                WebStorage.setItem(WebStorage.Storage.SESSION_STORAGE, cartKey, json);
 
-                try {
-                    String json = mapper.writeValueAsString(cart);
-                    WebStorage.setItem(WebStorage.Storage.SESSION_STORAGE, cartKey, json);
+            } catch (Exception ex) {
+                //TODO shit
 
-                } catch (Exception ex) {
-                    //TODO shit
-
-                }
             }
         });
 

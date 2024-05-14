@@ -7,7 +7,7 @@ public class Cart {
     private final List<CartItem> cartItems;
 
     public Cart() {
-        cartItems = new ArrayList<CartItem>();
+        cartItems = new ArrayList<>();
     }
 
     public void addCartItem(CartItem cartItem) {
