@@ -6,6 +6,7 @@
     font-weight: bold;
     border-radius: 10px;
     font-size: 24px;
+    width: 20px;
 }
 
 .custom-button:hover {

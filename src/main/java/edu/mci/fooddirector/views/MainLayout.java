@@ -28,6 +28,7 @@ public class MainLayout extends AppLayout {
         addDrawerContent();
         addHeaderContent();
         createFooter();
+        getStyle().set("background-color", "#FBF7EF");
     }
 
     private void addHeaderContent() {
