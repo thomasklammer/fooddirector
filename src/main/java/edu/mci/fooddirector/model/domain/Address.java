@@ -1,9 +1,11 @@
 package edu.mci.fooddirector.model.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name="tbAddresses")
 public class Address extends AbstractEntity {
     @NotBlank
     private String city;

@@ -20,8 +20,12 @@ public class OrderService {
         this.orderDetailRepository = orderDetailRepository;
     }
 
-    public List<Order> findByUserId(Long userId) {
+    public List<Order> findAllByUserId(Long userId) {
         return orderRepository.findAllByUserId(userId);
+    }
+
+    public List<Order> findAll() {
+        return orderRepository.findAll();
     }
 
     public void saveOrder(Order order) {

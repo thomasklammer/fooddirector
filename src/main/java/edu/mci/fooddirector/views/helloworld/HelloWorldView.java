@@ -14,6 +14,7 @@ import edu.mci.fooddirector.model.domain.Account;
 import edu.mci.fooddirector.model.domain.CartItem;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.CartService;
+import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.views.MainLayout;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 @PageTitle("Hello World")
 @Route(value = "hello-world", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
+
 public class HelloWorldView extends HorizontalLayout {
 
     private TextField name;
@@ -31,17 +33,6 @@ public class HelloWorldView extends HorizontalLayout {
         name = new TextField("Your name");
         sayHello = new Button("Say hello");
         sayHello.addClickListener(e -> {
-
-
-            var article = new edu.mci.fooddirector.model.domain.Article();
-            article.setName("Test");
-            article.setDescription("Das ist Artikel mit der Nummer ");
-            article.setArticleCategory(ArticleCategory.Dessert);
-            article.setNetPrice(5.99);
-            article.setTaxRate(20);
-
-
-            cartService.addCartItem(article);
 
 
 
