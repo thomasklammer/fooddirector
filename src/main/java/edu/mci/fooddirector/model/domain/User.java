@@ -11,16 +11,20 @@ public class User extends AbstractEntity {
 
     @Email
     @NotEmpty
-    @Column(unique = true)
+    @Column(unique = true, name="email")
+
     private String email;
 
     @NotEmpty
+    @Column(name="password")
     private String password;
 
     @NotEmpty
+    @Column(name="firstname")
     private String firstName;
 
     @NotEmpty
+    @Column(name="lastname")
     private String lastName;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -28,6 +32,7 @@ public class User extends AbstractEntity {
     @NotNull
     private Address deliveryAddress;
 
+    @Column(name="isadmin")
     private boolean isAdmin;
 
     public String getEmail() {

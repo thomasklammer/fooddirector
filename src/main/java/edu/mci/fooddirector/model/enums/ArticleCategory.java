@@ -5,5 +5,6 @@ public enum ArticleCategory {
     MainDish,
     Dessert,
     SideDish,
+    Beverage
 
 }

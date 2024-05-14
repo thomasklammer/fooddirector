@@ -14,13 +14,17 @@ public class OrderDetail extends AbstractEntity {
     @JoinColumn(name = "article_id")
     private Article articleId;
 
+    @Column(name="netvalue")
     private double netValue;
 
+    @Column(name="taxrate")
     private double taxRate;
 
     @Min(1)
+    @Column(name="amount")
     private int amount;
 
+    @Column(name="note")
     private String note;
 
     public Order getOrder() {

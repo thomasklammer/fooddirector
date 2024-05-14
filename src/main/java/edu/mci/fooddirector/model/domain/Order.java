@@ -13,15 +13,18 @@ import java.util.List;
 public class Order extends AbstractEntity {
 
     @NotNull
+    @Column(name="orderdate")
     private LocalDateTime orderDate;
 
     @NotNull
+    @Column(name="paymentmethod")
     private PaymentMethod paymentMethod;
 
     @NotNull
+    @Column(name="orderstatus")
     private OrderStatus orderStatus;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;

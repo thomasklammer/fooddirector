@@ -1,6 +1,7 @@
 package edu.mci.fooddirector.model.domain;
 
 import edu.mci.fooddirector.model.enums.ArticleCategory;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
@@ -12,23 +13,31 @@ import jakarta.validation.constraints.NotNull;
 @Table(name="tbArticles")
 public class Article extends AbstractEntity {
     @NotEmpty
+    @Column(name="name")
     private String name;
 
+    @Column(name="netprice")
     private double netPrice;
 
+    @Column(name="taxrate")
     private double taxRate;
 
     @Lob
+    @Column(name="image")
     private byte[] image;
 
+    @Column(name="description")
     private String description;
 
     @NotNull
+    @Column(name="articlecategory")
     private ArticleCategory articleCategory;
 
+    @Column(name="dailyoffer")
     private boolean dailyOffer;
 
     @Max(100)
+    @Column(name="discount")
     private double discount;
 
     public String getName() {
