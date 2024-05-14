@@ -37,10 +37,7 @@ import java.util.List;
 
 public class OrdersView extends Div {
 
-    private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
-
-    public OrdersView(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository){
+    public OrdersView(){
 
         VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(false);
@@ -68,10 +65,9 @@ public class OrdersView extends Div {
         order1.setPaymentMethod(PaymentMethod.PayPal);
         order1.setDeliveryAddress(address1);
 
-        OrderService orderService = new OrderService(orderRepository,orderDetailRepository);
-        orderService.saveOrder(order1);
+        OrderService.saveOrder(order1);
 
-        List<Order> orders = orderService.findAll();
+        List<Order> orders = OrderService.findAll();
 
         Grid<Order> grid = new Grid<>();
         grid.setItems(orders);
@@ -106,8 +102,6 @@ public class OrdersView extends Div {
         container.setClassName("OrdersViewContainer");
 
         add(container);
-        this.orderRepository = orderRepository;
-        this.orderDetailRepository = orderDetailRepository;
     }
 
 }
