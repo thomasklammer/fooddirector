@@ -6,6 +6,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
@@ -45,8 +46,18 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation());
 
+        var navigation = createNavigation();
+        var adminNavigation = createAdminNavigation();
+
+        VerticalLayout navWrapper = new VerticalLayout(navigation, adminNavigation);
+        navWrapper.setSpacing(true);
+        navWrapper.setSizeUndefined();
+        navigation.setWidthFull();
+        adminNavigation.setWidthFull();
+
+
+        Scroller scroller = new Scroller(navWrapper);
         addToDrawer(header, scroller);
     }
 
@@ -56,11 +67,19 @@ public class MainLayout extends AppLayout {
 
         nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
         nav.addItem(new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        nav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
-
+        //nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
 
         return nav;
+    }
+
+    private SideNav createAdminNavigation() {
+        SideNav adminNav = new SideNav();
+        adminNav.setLabel("Admin");
+        adminNav.setCollapsible(true);
+        adminNav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
+        adminNav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
+
+        return adminNav;
     }
 
     private void createFooter() {
