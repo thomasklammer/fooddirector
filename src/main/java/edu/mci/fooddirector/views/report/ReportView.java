@@ -95,19 +95,24 @@ public class ReportView extends VerticalLayout {
         //#############################################################################################
 
         // Monthly Data
+
         Number[] monthlySales = new Number[13];
         Number[] monthlyOrders = new Number[13];
         for (int month = 0; month < 13; month++) {
             monthlySales[month] = 0;
             monthlyOrders[month] = 0;
             // Sum Amount of monthly Orders
+
             List<Order> tmpOrders = orderService.findByMonthAndYear(currentMonth, currentYear);
+            double tmp = tmpOrders.get(0).getOrderValue();
             monthlySales[month] = tmpOrders.stream().mapToDouble(Order::getOrderValue).sum();
             monthlyOrders[month] = (long) tmpOrders.size();
         }
 
+
+
         // Create the primary data series
-        ListSeries series1 = new ListSeries("Monatsumsatz (€)", monthlySales);
+        ListSeries series1 = new ListSeries("Monatsumsatz (€)", values1);
         ListSeries series2 = new ListSeries("Bestellungen", values2);
 
         // Set different colors for each series

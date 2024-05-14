@@ -35,7 +35,7 @@ public class Order extends AbstractEntity {
     private Address deliveryAddress;
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
     public double getOrderValue() {
