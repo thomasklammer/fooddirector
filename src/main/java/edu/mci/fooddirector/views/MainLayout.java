@@ -55,11 +55,21 @@ public class MainLayout extends AppLayout {
         SideNav nav = new SideNav();
         nav.addClassNames("side-nav");
 
-        //nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
-        nav.addItem(new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        nav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
+        nav.getElement().getStyle().set("background-color", "#FBF7EF");
 
+        String activeClass = "active-nav-item";
+
+        SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        cartNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(cartNavItem);
+
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        ordersNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(ordersNavItem);
+
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        reportNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(reportNavItem);
 
         return nav;
     }
