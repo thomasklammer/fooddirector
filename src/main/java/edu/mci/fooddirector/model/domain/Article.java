@@ -1,5 +1,6 @@
 package edu.mci.fooddirector.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,8 +49,20 @@ public class Article extends AbstractEntity {
         this.name = name;
     }
 
+
     public double getNetPrice() {
         return netPrice;
+    }
+
+    @JsonIgnore
+    public double getGrossPrice() {
+        return netPrice + (netPrice * taxRate / 100);
+    }
+
+    @JsonIgnore
+    public double getGrossPriceDiscounted() {
+        var grossPrice = getGrossPrice();
+        return grossPrice - (grossPrice * discount / 100);
     }
 
     public void setNetPrice(double netPrice) {

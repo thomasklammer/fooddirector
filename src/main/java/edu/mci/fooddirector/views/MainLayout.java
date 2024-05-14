@@ -46,8 +46,18 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation());
 
+        var navigation = createNavigation();
+        var adminNavigation = createAdminNavigation();
+
+        VerticalLayout navWrapper = new VerticalLayout(navigation, adminNavigation);
+        navWrapper.setSpacing(true);
+        navWrapper.setSizeUndefined();
+        navigation.setWidthFull();
+        adminNavigation.setWidthFull();
+
+
+        Scroller scroller = new Scroller(navWrapper);
         addToDrawer(header, scroller);
     }
 
@@ -72,6 +82,16 @@ public class MainLayout extends AppLayout {
         nav.addItem(reportNavItem);
 
         return nav;
+    }
+
+    private SideNav createAdminNavigation() {
+        SideNav adminNav = new SideNav();
+        adminNav.setLabel("Admin");
+        adminNav.setCollapsible(true);
+        adminNav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
+        adminNav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
+
+        return adminNav;
     }
 
     private void createFooter() {
