@@ -1,5 +1,6 @@
 package edu.mci.fooddirector.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,9 +23,8 @@ public class Article extends AbstractEntity {
     @Column(name="taxrate")
     private double taxRate;
 
-    @Lob
     @Column(name="image")
-    private byte[] image;
+    private String image;
 
     @Column(name="description")
     private String description;
@@ -52,6 +52,22 @@ public class Article extends AbstractEntity {
         return netPrice;
     }
 
+    @JsonIgnore
+    public double getNetPriceDiscounted() {
+        var netPrice = getNetPrice();
+        return netPrice - (netPrice * discount / 100);
+    }
+
+    @JsonIgnore
+    public double getGrossPriceDiscounted() {
+        return getNetPriceDiscounted() + calculateTax(getNetPriceDiscounted());
+    }
+
+    @JsonIgnore
+    private double calculateTax(double value) {
+        return value * getTaxRate() / 100;
+    }
+
     public void setNetPrice(double netPrice) {
         this.netPrice = netPrice;
     }
@@ -64,11 +80,11 @@ public class Article extends AbstractEntity {
         this.taxRate = taxRate;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

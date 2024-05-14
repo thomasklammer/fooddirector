@@ -15,5 +15,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select o from Order o where month(o.orderDate) = ?1 and year(o.orderDate) = ?2")
     List<Order> findByMonthAndYear(int month, int year);
-
 }
+

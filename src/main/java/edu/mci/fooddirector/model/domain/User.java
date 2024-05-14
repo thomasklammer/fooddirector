@@ -27,7 +27,7 @@ public class User extends AbstractEntity {
     @Column(name="lastname")
     private String lastName;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "deliveryaddress_id")
     @NotNull
     private Address deliveryAddress;
@@ -66,7 +66,7 @@ public class User extends AbstractEntity {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+ 
     public Address getDeliveryAddress() {
         return deliveryAddress;
     }
