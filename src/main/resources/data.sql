@@ -1,9 +1,11 @@
 insert into tb_addresses(id, city, zipcode, street, housenumber) values(1, 'Innsbruck', '6020', 'Universitätsstraße', '15');
 insert into tb_addresses(id, city, zipcode, street, housenumber) values(2, 'Sillian', '9920', 'Dorf', '92G/14');
 insert into tb_addresses(id, city, zipcode, street, housenumber) values(3, 'Sillian', '9920', 'Dorf', '185 h');
+insert into tb_addresses(id, city, zipcode, street, housenumber) values(4, 'Lienz', '9900', 'Emanuel v. Hiblerstrasse', '3 a');
 
-INSERT INTO tb_users(id, email, password, firstname, lastname, deliveryaddress_id, isadmin)
-values(1, 'test@test.at', '123456', 'Max', 'Mustermann', 1, 1);
+INSERT INTO tb_users(id, email, password, firstname, lastname, deliveryaddress_id, isadmin) values
+(1, 'test@test.at', '123456', 'Max', 'Mustermann', 1, 0),
+(2, 'admin@test.at', '123456', 'Sieglinde', 'Musterfrau', 4, 1);
 
 insert into tb_articles(id, name, netprice, taxrate, description, articlecategory, dailyoffer) values
 (1, 'Wiener Schnitzel', 10.99, 20, 'Das ist ein Wiener Schnitzel', 1, 0),
