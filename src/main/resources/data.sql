@@ -1,3 +1,4 @@
+
 insert into tb_addresses(id, city, zipcode, street, housenumber) values(1001, 'Innsbruck', '6020', 'Universitätsstraße', '15');
 insert into tb_addresses(id, city, zipcode, street, housenumber) values(1002, 'Sillian', '9920', 'Dorf', '92G/14');
 insert into tb_addresses(id, city, zipcode, street, housenumber) values(1003, 'Sillian', '9920', 'Dorf', '185 h');
@@ -16,11 +17,9 @@ insert into tb_articles(id, name, netprice, taxrate, description, articlecategor
 (1006, 'Sprite', 2.99, 10, 'Kaltes Getränk', 4, 0, 0),
 (1007, 'Pommes', 4.50, 20, 'Fritten dazu?', 3, 0, 0);
 
-
 insert into tb_orders(id, orderdate, paymentmethod, orderstatus, user_id, deliveryaddress_id) values
 (1001, '2024-04-14 16:22:10', 0, 0, 1001, 1002),
 (1002, '2024-05-14 17:22:10', 2, 1, 1001, 1003);
-
 
 insert into tb_order_details(id, order_id, article_id, netvalue, taxrate, amount, note) values
 (1001, 1001, 1001, 16.22, 20, 2, 'Ohne Tomaten'),
