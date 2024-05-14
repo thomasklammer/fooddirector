@@ -60,6 +60,7 @@ public class CartView extends VerticalLayout {
 
 
     UnorderedList summaryList;
+    Section cartItemsList;
 
 
     public CartView(CartService cartService, NotificationService notificationService) {
@@ -79,10 +80,18 @@ public class CartView extends VerticalLayout {
 
         cartService.getCart(cart ->  {
             this.cart = cart;
-            content.add(createItemsList());
+
+            cartItemsList = createItemsList();
+            content.add(cartItemsList);
             content.add(createAside());
         });
 
+    }
+
+    private void recreateCartItems() {
+        var newCartItems = createItemsList();
+        content.replace(cartItemsList, newCartItems);
+        cartItemsList = newCartItems;
     }
 
 
@@ -212,8 +221,6 @@ public class CartView extends VerticalLayout {
 
         subSection.add(postalCode, city);
 
-
-
         shippingDetails.add(header, nameSubSection, streetSubSection, subSection);
         return shippingDetails;
     }
@@ -223,16 +230,12 @@ public class CartView extends VerticalLayout {
         Footer footer = new Footer();
         footer.addClassNames(Display.FLEX, AlignItems.CENTER, JustifyContent.BETWEEN, Margin.Vertical.MEDIUM);
 
-
         Button pay = new Button("Jetzt bestellen", new Icon(VaadinIcon.LOCK));
         pay.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         footer.add(pay);
         return footer;
     }
-
-
-
 
 
     private Aside createAside() {
@@ -329,6 +332,7 @@ public class CartView extends VerticalLayout {
             cart.removeCartItem(cartItem);
             cartService.setCart(cart);
             updateSummary();
+            recreateCartItems();
         });
 
 
