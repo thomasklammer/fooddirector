@@ -28,6 +28,12 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    public List<Order> findByMonthAndYear(int month, int year) {
+        return orderRepository.findByMonthAndYear(month, year);
+    }
+
+
+
     public void saveOrder(Order order) {
         orderRepository.save(order);
     }
