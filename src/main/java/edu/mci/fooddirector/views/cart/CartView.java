@@ -19,7 +19,7 @@ import edu.mci.fooddirector.model.services.NotificationService;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
-import edu.mci.fooddirector.views.LoginView;
+import edu.mci.fooddirector.views.login.LoginView;
 import edu.mci.fooddirector.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -45,7 +45,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
-import edu.mci.fooddirector.views.RegistrationView;
+import edu.mci.fooddirector.views.login.RegistrationView;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
