@@ -7,14 +7,14 @@ INSERT INTO tb_users(id, email, password, firstname, lastname, deliveryaddress_i
 (1, 'test@test.at', '123456', 'Max', 'Mustermann', 1, 0),
 (2, 'admin@test.at', '123456', 'Sieglinde', 'Musterfrau', 4, 1);
 
-insert into tb_articles(id, name, netprice, taxrate, description, articlecategory, dailyoffer) values
-(1, 'Wiener Schnitzel', 10.99, 20, 'Das ist ein Wiener Schnitzel', 1, 0),
-(2, 'Knoblauchcremesuppe', 5.30, 20, 'Knutschen ist danach nicht mehr drin', 0, 0),
-(3, 'Dessertvariation', 7.80, 20, 'Sehr köstlich', 2, 0),
-(4, 'Jägerschnitzel', 14.70, 20, 'Ein Schnitzel nur für Jäger', 1, 1),
-(5, 'Nudelpfanne', 8.50, 20, 'Beste Nudelpfanne in der Stadt', 1, 1),
-(6, 'Sprite', 2.99, 10, 'Kaltes Getränk', 4, 0),
-(7, 'Pommes', 4.50, 20, 'Fritten dazu?', 3, 0);
+insert into tb_articles(id, name, netprice, taxrate, description, articlecategory, dailyoffer, discount) values
+(1, 'Wiener Schnitzel', 10.99, 20, 'Das ist ein Wiener Schnitzel', 1, 0, 0),
+(2, 'Knoblauchcremesuppe', 5.30, 20, 'Knutschen ist danach nicht mehr drin', 0, 0, 0),
+(3, 'Dessertvariation', 7.80, 20, 'Sehr köstlich', 2, 0, 0),
+(4, 'Jägerschnitzel', 14.70, 20, 'Ein Schnitzel nur für Jäger', 1, 1, 10),
+(5, 'Nudelpfanne', 8.50, 20, 'Beste Nudelpfanne in der Stadt', 1, 1, 20),
+(6, 'Sprite', 2.99, 10, 'Kaltes Getränk', 4, 0, 0),
+(7, 'Pommes', 4.50, 20, 'Fritten dazu?', 3, 0, 0);
 
 
 insert into tb_orders(id, orderdate, paymentmethod, orderstatus, user_id, deliveryaddress_id) values
