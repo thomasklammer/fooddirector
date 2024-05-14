@@ -54,7 +54,7 @@ public class OrderDetailsView extends Div implements BeforeEnterObserver {
 
                 Grid<OrderDetail> grid = new Grid<>();
                 grid.setItems(selectedOrder.getOrderDetails());
-                grid.addColumn(orderDetail -> orderDetail.getArticleId().getName()).setHeader("Artikel").setSortable(true);
+                grid.addColumn(orderDetail -> orderDetail.getArticle().getName()).setHeader("Artikel").setSortable(true);
                 grid.addColumn(OrderDetail::getAmount).setHeader("Menge").setSortable(true);
                 grid.addColumn(orderDetail -> orderDetail.getTaxRate() + " %").setHeader("Tax Rate").setSortable(true);
                 grid.addColumn(orderDetail -> "€ " + orderDetail.getNetValue()).setHeader("Net Value").setSortable(true);

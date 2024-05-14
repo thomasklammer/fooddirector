@@ -45,7 +45,7 @@ public class OrdersView extends Div {
         grid.addColumn(order -> {
             StringBuilder articleNames = new StringBuilder();
             for (OrderDetail orderDetail : order.getOrderDetails()) {
-                articleNames.append(orderDetail.getArticleId().getName()).append(", ");
+                articleNames.append(orderDetail.getArticle().getName()).append(", ");
             }
             if (articleNames.length() > 0) {
                 articleNames.delete(articleNames.length() - 2, articleNames.length());
