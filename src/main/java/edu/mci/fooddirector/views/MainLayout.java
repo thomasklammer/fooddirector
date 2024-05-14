@@ -13,6 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.cart.CartView;
 import edu.mci.fooddirector.views.helloworld.HelloWorldView;
+import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
@@ -29,6 +30,7 @@ public class MainLayout extends AppLayout {
         addDrawerContent();
         addHeaderContent();
         createFooter();
+        getStyle().set("background-color", "#FBF7EF");
     }
 
     private void addHeaderContent() {
@@ -65,9 +67,21 @@ public class MainLayout extends AppLayout {
         SideNav nav = new SideNav();
         nav.addClassNames("side-nav");
 
-        nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
-        nav.addItem(new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        //nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
+        nav.getElement().getStyle().set("background-color", "#FBF7EF");
+
+        String activeClass = "active-nav-item";
+
+        SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        cartNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(cartNavItem);
+
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        ordersNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(ordersNavItem);
+
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        reportNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(reportNavItem);
 
         return nav;
     }
@@ -76,8 +90,14 @@ public class MainLayout extends AppLayout {
         SideNav adminNav = new SideNav();
         adminNav.setLabel("Admin");
         adminNav.setCollapsible(true);
-        adminNav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        adminNav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
+
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        ordersNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(ordersNavItem);
+
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        reportNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(reportNavItem);
 
         return adminNav;
     }
