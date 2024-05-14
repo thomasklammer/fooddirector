@@ -79,9 +79,6 @@ public class MainLayout extends AppLayout {
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
 
-        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
-        reportNavItem.getElement().getClassList().add(activeClass);
-        nav.addItem(reportNavItem);
 
         return nav;
     }
