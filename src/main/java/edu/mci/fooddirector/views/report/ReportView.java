@@ -83,43 +83,36 @@ public class ReportView extends VerticalLayout {
         yAxis2.setOpposite(true); // Position on the right
         conf.addyAxis(yAxis2);
 
-        //#############################################################################################
-        // Generate random values for the y-axis
-        Random random = new Random();
-        Number[] values1 = new Number[13];
-        Number[] values2 = new Number[13];
-        for (int i = 0; i < 13; i++) {
-            values1[i] = 5000 + random.nextInt(5001); // random value between 5000 and 10000
-            values2[i] = 500 + random.nextInt(301);   // random value between 500 and 800
-        }
-        //#############################################################################################
-
         // Monthly Data
-
         Number[] monthlySales = new Number[13];
         Number[] monthlyOrders = new Number[13];
-        for (int month = 0; month < 13; month++) {
-            monthlySales[month] = 0;
-            monthlyOrders[month] = 0;
+        for (int i = 0; i < 13; i++) {
+            int month = currentMonth + i;
+            int year = currentYear - 1;
+            if (month > 12) {
+                month -= 12;
+                year = currentYear;
+            }
             // Sum Amount of monthly Orders
-
-            List<Order> tmpOrders = orderService.findByMonthAndYear(currentMonth, currentYear);
-            double tmp = tmpOrders.get(0).getOrderValue();
-            monthlySales[month] = tmpOrders.stream().mapToDouble(Order::getOrderValue).sum();
-            monthlyOrders[month] = (long) tmpOrders.size();
+            List<Order> tmpOrders = orderService.findByMonthAndYear(month, year);
+            if (!tmpOrders.isEmpty()) {
+                monthlySales[i] = tmpOrders.stream().mapToDouble(Order::getOrderValue).sum();
+                monthlyOrders[i] = (long) tmpOrders.size();
+            } else {
+                monthlySales[i] = 0;
+                monthlyOrders[i] = 0;
+            }
         }
 
-
-
         // Create the primary data series
-        ListSeries series1 = new ListSeries("Monatsumsatz (€)", values1);
-        ListSeries series2 = new ListSeries("Bestellungen", values2);
+        ListSeries series1 = new ListSeries("Monatsumsatz (€)", monthlySales);
+        ListSeries series2 = new ListSeries("Bestellungen", monthlyOrders);
 
         // Set different colors for each series
         PlotOptionsColumn plotOptions1 = new PlotOptionsColumn();
         plotOptions1.setColor(new SolidColor("#1f77b4"));
         DataLabels dataLabels1 = new DataLabels(true);
-        dataLabels1.setFormatter("function() { return '€' + this.y.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }");
+        dataLabels1.setFormatter("function() { return '€ ' + this.y.toLocaleString('de-DE', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }");
         plotOptions1.setDataLabels(dataLabels1);
         series1.setPlotOptions(plotOptions1);
         series1.setyAxis(0); // Left Y-Achse
@@ -136,8 +129,8 @@ public class ReportView extends VerticalLayout {
         conf.addSeries(series2);
 
         // Create export buttons
-        Button pdfButton = new Button("Export as PDF", event -> exportToPdf(months, values1, values2));
-        Button csvButton = new Button("Export as CSV", event -> exportToCsv(months, values1, values2));
+        Button pdfButton = new Button("Export as PDF", event -> exportToPdf(months, monthlySales, monthlyOrders));
+        Button csvButton = new Button("Export as CSV", event -> exportToCsv(months, monthlySales, monthlyOrders));
 
         // Add components to the layout
         add(header);
