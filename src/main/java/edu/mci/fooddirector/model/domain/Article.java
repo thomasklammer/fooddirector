@@ -3,11 +3,13 @@ package edu.mci.fooddirector.model.domain;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name="tbArticles")
 public class Article extends AbstractEntity {
     @NotEmpty
     private String name;

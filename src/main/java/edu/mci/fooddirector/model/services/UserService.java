@@ -1,6 +1,6 @@
 package edu.mci.fooddirector.model.services;
 
-import edu.mci.fooddirector.model.domain.Account;
+import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void saveUser(Account user) {
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 
-    public List<Account> findAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 }
