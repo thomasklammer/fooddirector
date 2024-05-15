@@ -44,7 +44,7 @@ public class OrdersView extends Div {
             for (OrderDetail orderDetail : order.getOrderDetails()) {
                 articleNames.append(orderDetail.getArticle().getName()).append(", ");
             }
-            if (articleNames.length() > 0) {
+            if (!articleNames.isEmpty()) {
                 articleNames.delete(articleNames.length() - 2, articleNames.length());
             }
             return articleNames.toString();

@@ -2,7 +2,6 @@ package edu.mci.fooddirector.views.login;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -12,10 +11,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import edu.mci.fooddirector.model.domain.Address;
 import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.services.NotificationService;
-import edu.mci.fooddirector.model.services.RegistrationService;
 import edu.mci.fooddirector.model.services.UserService;
 import jakarta.annotation.security.PermitAll;
 
@@ -24,8 +21,6 @@ import jakarta.annotation.security.PermitAll;
 @PermitAll
 @AnonymousAllowed
 public class RegistrationView extends VerticalLayout {
-
-    private final UserService userService;
 
     public RegistrationView(NotificationService notificationService, UserService userService) {
         addClassName("registration-view");
@@ -101,6 +96,5 @@ public class RegistrationView extends VerticalLayout {
         });
 
         add(title, nameLayout, emailField, passwordLayout, addressInfoLayout, registerButton, backToLoginButton);
-        this.userService = userService;
     }
 }

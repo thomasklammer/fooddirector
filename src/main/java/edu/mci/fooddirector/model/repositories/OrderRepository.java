@@ -2,7 +2,6 @@
 package edu.mci.fooddirector.model.repositories;
 
 import edu.mci.fooddirector.model.domain.Order;
-import edu.mci.fooddirector.model.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -21,7 +21,6 @@ import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.HasValue;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class MenuAdminView extends VerticalLayout {
 
     private final ArticleService articleService;
     private final NotificationService notificationService;
-    private Grid<Article> grid = new Grid<>(Article.class);
+    private final Grid<Article> grid = new Grid<>(Article.class);
 
 
     @Autowired
@@ -81,7 +80,7 @@ public class MenuAdminView extends VerticalLayout {
         grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
         grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getDiscount())).setHeader("Rabatt");
 
-        grid.addComponentColumn(article -> createButtons(article)).setHeader("Aktionen");
+        grid.addComponentColumn(this::createButtons).setHeader("Aktionen");
 
     }
 
@@ -172,9 +171,7 @@ public class MenuAdminView extends VerticalLayout {
 
         });
 
-        Button cancelButton = new Button("Abbrechen", e -> {
-            dialog.close();
-        });
+        Button cancelButton = new Button("Abbrechen", e -> dialog.close());
 
         var horizontalLayout = new HorizontalLayout(saveButton, cancelButton);
 

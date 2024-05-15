@@ -20,7 +20,6 @@ import jakarta.annotation.security.PermitAll;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final LoginForm login = new LoginForm();
-    private final Button registerButton = new Button("Registrieren");
 
     public LoginView(){
         addClassName("login-view");
@@ -30,8 +29,8 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         login.setAction("login");
 
+        Button registerButton = new Button("Registrieren");
         registerButton.addClickListener(e -> {
-            // Navigate to the registration view when the button is clicked
             UI.getCurrent().navigate(RegistrationView.class);
         });
 
@@ -40,7 +39,6 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        // inform the user about an authentication error
         if(beforeEnterEvent.getLocation()
                 .getQueryParameters()
                 .getParameters()

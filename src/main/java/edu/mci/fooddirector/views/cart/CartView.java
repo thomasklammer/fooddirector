@@ -2,7 +2,6 @@ package edu.mci.fooddirector.views.cart;
 
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -86,7 +85,7 @@ public class CartView extends VerticalLayout {
 
         var user = userService.getCurrentUser();
 
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             UI.getCurrent().navigate(LoginView.class);
             return;
         } else {
@@ -254,14 +253,12 @@ public class CartView extends VerticalLayout {
         city.addClassNames(Flex.GROW, Margin.Bottom.SMALL);
 
 
-
         addressBinder = new Binder<>(Address.class);
         addressBinder.setBean(currentUser.getDeliveryAddress());
         addressBinder.forField(postalCode).asRequired("Pflichtfeld").bind(Address::getZipCode, Address::setZipCode);
         addressBinder.forField(city).asRequired("Pflichtfeld").bind(Address::getCity, Address::setCity);
         addressBinder.forField(street).asRequired("Pflichtfeld").bind(Address::getStreet, Address::setStreet);
         addressBinder.forField(houseNumber).asRequired("Pflichtfeld").bind(Address::getHouseNumber, Address::setHouseNumber);
-
 
 
         subSection.add(postalCode, city);
@@ -284,14 +281,14 @@ public class CartView extends VerticalLayout {
                 return;
             }
 
-            if(selectedPaymentMethod == null || selectedPaymentMethod.isEmpty()) {
+            if (selectedPaymentMethod == null || selectedPaymentMethod.isEmpty()) {
                 notificationService.showWarning("Bitte wählen Sie eine Bezahlmethode");
                 return;
             }
 
-            var paymentMethod = PaymentMethod.PayPal;
+            PaymentMethod paymentMethod;
 
-            switch(selectedPaymentMethod) {
+            switch (selectedPaymentMethod) {
                 case "Kreditkarte":
                     paymentMethod = PaymentMethod.CreditCard;
                     break;
@@ -299,7 +296,7 @@ public class CartView extends VerticalLayout {
                     paymentMethod = PaymentMethod.PayPal;
                     break;
                 case "BitCoin":
-                    paymentMethod = PaymentMethod.PayPal;
+                    paymentMethod = PaymentMethod.BitCoin;
                     break;
                 case "Bei Abholung":
                     paymentMethod = PaymentMethod.OnDelivery;
@@ -311,7 +308,7 @@ public class CartView extends VerticalLayout {
 
 
             addressBinder.validate();
-            if(!addressBinder.isValid()) {
+            if (!addressBinder.isValid()) {
                 return;
             }
 
@@ -333,7 +330,7 @@ public class CartView extends VerticalLayout {
             order.setDeliveryAddress(deliveryAddress);
 
             var orderDetails = new ArrayList<OrderDetail>();
-            for(var cartItem : cart.getCartItems()) {
+            for (var cartItem : cart.getCartItems()) {
                 var orderDetail = new OrderDetail();
                 orderDetail.setAmount(cartItem.getAmount());
                 orderDetail.setArticle(cartItem.getArticle());
@@ -349,8 +346,7 @@ public class CartView extends VerticalLayout {
             try {
                 orderService.saveOrder(order);
                 UI.getCurrent().navigate(CartSuccessView.class);
-            }
-            catch(Exception ex) {
+            } catch (Exception ex) {
                 notificationService.showError("Beim Bestellvorgang ist ein Fehler aufgetreten :(");
             }
 

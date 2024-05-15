@@ -32,7 +32,6 @@ public class MainLayout extends AppLayout {
     private final SecurityService securityService;
     private final UserService userService;
     private H2 viewTitle;
-    private Footer footer;
 
     public MainLayout(SecurityService securityService, UserService userService) {
         this.securityService = securityService;
@@ -154,7 +153,7 @@ public class MainLayout extends AppLayout {
 
         div.add(instagram, facebook, twitter, impressum, kontakt, agbs);
 
-        footer = new Footer();
+        Footer footer = new Footer();
         footer.add(div);
         addToNavbar(false, footer);
     }
