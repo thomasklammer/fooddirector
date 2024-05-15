@@ -31,7 +31,8 @@ public class HelloWorldView extends HorizontalLayout {
         sayHello.addClickListener(e -> {
             try {
                 var article = articleService.findFirst();
-                article.ifPresent(cartService::addCartItem);
+                int quantity = 1;
+                article.ifPresent(article1 -> cartService.addCartItem(article1, quantity));
             }
             catch(Exception ex) {
                 System.out.println(ex.getMessage());

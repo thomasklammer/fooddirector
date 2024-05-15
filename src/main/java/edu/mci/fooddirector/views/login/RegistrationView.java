@@ -34,10 +34,8 @@ public class RegistrationView extends VerticalLayout {
         // User Information Section
         TextField firstNameField = new TextField("First Name");
         TextField lastNameField = new TextField("Last Name");
-
         HorizontalLayout nameLayout = new HorizontalLayout(firstNameField, lastNameField);
         nameLayout.setSpacing(true);
-
         EmailField emailField = new EmailField("Email");
 
         HorizontalLayout passwordLayout = new HorizontalLayout();
