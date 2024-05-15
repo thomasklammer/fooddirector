@@ -83,3 +83,9 @@ vaadin-side-nav-item vaadin-icon {
   font-weight: bold;
   border-left: 4px solid var(--primary-text-color);
 }
+
+.active-nav-item {
+  background-color: #FBF7EF;
+  color: #2C2E33;
+  font-weight: bold;
+}

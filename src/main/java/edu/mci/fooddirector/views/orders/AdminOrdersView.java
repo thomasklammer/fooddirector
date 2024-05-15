@@ -13,14 +13,14 @@ import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.enums.OrderStatus;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
-
+import jakarta.annotation.security.PermitAll;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
 @PageTitle("Admin Bestellungen")
 @Route(value = "Adminorders", layout = MainLayout.class)
-
+@PermitAll
 public class AdminOrdersView extends Div {
     public static int i;
 

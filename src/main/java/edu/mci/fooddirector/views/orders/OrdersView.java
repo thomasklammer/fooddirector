@@ -17,6 +17,7 @@ import edu.mci.fooddirector.model.enums.PaymentMethod;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @PageTitle("Bestellungen")
 @Route(value = "orders", layout = MainLayout.class)
-
+@PermitAll
 public class OrdersView extends Div {
     public static int i;
 

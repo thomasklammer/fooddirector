@@ -8,10 +8,11 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import edu.mci.fooddirector.model.services.CartService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Warenkorb | Fooddirector")
 @Route(value = "cart-success", layout = MainLayout.class)
-
+@PermitAll
 public class CartSuccessView extends VerticalLayout {
     public CartSuccessView(CartService cartService) {
         cartService.clearCart();

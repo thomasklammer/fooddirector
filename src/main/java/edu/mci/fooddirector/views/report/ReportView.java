@@ -22,6 +22,7 @@ import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,7 @@ import org.apache.commons.csv.CSVPrinter;
 
 @PageTitle("Bericht | Fooddirector")
 @Route(value = "report", layout = MainLayout.class)
+@PermitAll
 public class ReportView extends VerticalLayout {
 
     public ReportView(OrderService orderService) {

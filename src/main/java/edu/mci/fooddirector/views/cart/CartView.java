@@ -46,12 +46,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import edu.mci.fooddirector.views.login.RegistrationView;
+import jakarta.annotation.security.PermitAll;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @PageTitle("Warenkorb | Fooddirector")
 @Route(value = "cart", layout = MainLayout.class)
+@PermitAll
 public class CartView extends VerticalLayout {
 
 

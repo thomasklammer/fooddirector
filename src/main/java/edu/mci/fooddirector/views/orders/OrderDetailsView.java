@@ -16,11 +16,15 @@ import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
+
+import java.time.format.DateTimeFormatter;
 
 import java.time.format.DateTimeFormatter;
 
 @PageTitle("Bestelldetails")
 @Route(value = "order-details/:id", layout = MainLayout.class)
+@PermitAll
 public class OrderDetailsView extends Div implements BeforeEnterObserver {
 
     private final VerticalLayout layout;

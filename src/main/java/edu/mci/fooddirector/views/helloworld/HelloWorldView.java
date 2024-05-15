@@ -10,10 +10,12 @@ import edu.mci.fooddirector.model.services.ArticleService;
 import edu.mci.fooddirector.model.services.CartService;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Hello World")
 @Route(value = "hello-world", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
+@PermitAll
 public class HelloWorldView extends HorizontalLayout {
 
     private TextField name;
