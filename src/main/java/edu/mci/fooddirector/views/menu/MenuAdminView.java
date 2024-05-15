@@ -34,8 +34,6 @@ public class MenuAdminView extends VerticalLayout {
     private Grid<Article> grid = new Grid<>(Article.class);
 
 
-
-
     @Autowired
     public MenuAdminView(ArticleService articleService, NotificationService notificationService) {
         this.notificationService = notificationService;
@@ -44,7 +42,16 @@ public class MenuAdminView extends VerticalLayout {
 
         addClassName("padding-bottom");
 
-        Button addArticleButton = new Button("Neuen Artikel anlegen", e -> openCreateArticleDialog());
+        var dummyArticle = new Article();
+        dummyArticle.setName("");
+        dummyArticle.setTaxRate(20);
+        dummyArticle.setDescription("");
+        dummyArticle.setDailyOffer(false);
+        dummyArticle.setImage("");
+        dummyArticle.setDiscount(0);
+
+
+        Button addArticleButton = new Button("Neuen Artikel anlegen", e -> openEditDialog(dummyArticle));
         addArticleButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Grid<Article> articleGrid = createArticleGrid();
@@ -57,12 +64,9 @@ public class MenuAdminView extends VerticalLayout {
         toolbar.setWidthFull();
         toolbar.setPadding(true);
 
-        FormLayout articleForm = createArticleForm();
-        articleForm.setVisible(false); //
 
         add(toolbar);
     }
-
 
 
     private void configureGrid() {
@@ -133,97 +137,33 @@ public class MenuAdminView extends VerticalLayout {
         discountField.setValue(String.valueOf(article.getDiscount()));
 
         Button saveButton = new Button("Speichern", e -> {
-            article.setName(nameField.getValue());
-            article.setNetPrice(Double.parseDouble(priceField.getValue()));
-            article.setTaxRate(Double.parseDouble(taxRateField.getValue()));
-            article.setDescription(descriptionField.getValue());
-            article.setArticleCategory(categoryComboBox.getValue());
-            article.setDailyOffer(dailyOfferCheckbox.getValue());
-            article.setDiscount(Double.parseDouble(discountField.getValue()));
+            try {
+                article.setName(nameField.getValue());
+                article.setNetPrice(Double.parseDouble(priceField.getValue()));
+                article.setTaxRate(Double.parseDouble(taxRateField.getValue()));
+                article.setDescription(descriptionField.getValue());
+                article.setArticleCategory(categoryComboBox.getValue());
+                article.setDailyOffer(dailyOfferCheckbox.getValue());
+                article.setDiscount(Double.parseDouble(discountField.getValue()));
 
-            articleService.saveArticle(article);
-            updateList();
+                articleService.saveArticle(article);
+                updateList();
+                dialog.close();
+            } catch (Exception ex) {
+                notificationService.showError("Fehler beim Speichern des Artikels: " + ex.getMessage());
+            }
+
+        });
+
+        Button cancelButton = new Button("Abbrechen", e -> {
             dialog.close();
         });
 
-        formLayout.add(nameField, priceField, taxRateField, descriptionField, categoryComboBox, dailyOfferCheckbox, discountField, saveButton);
+        var horizontalLayout = new HorizontalLayout(saveButton, cancelButton);
+
+        formLayout.add(nameField, priceField, taxRateField, descriptionField, categoryComboBox, dailyOfferCheckbox, discountField, horizontalLayout);
         dialog.add(formLayout);
         dialog.open();
     }
 
-    private void openCreateArticleDialog() {
-        Dialog dialog = new Dialog();
-        dialog.setWidth("400px");
-
-        FormLayout formLayout = new FormLayout();
-
-        TextField nameField = new TextField("Name");
-        TextField priceField = new TextField("Net Price");
-        TextField taxRateField = new TextField("Tax Rate");
-        TextField descriptionField = new TextField("Description");
-        ComboBox<ArticleCategory> categoryComboBox = new ComboBox<>("Category", ArticleCategory.values());
-        Checkbox dailyOfferCheckbox = new Checkbox("Daily Offer");
-        TextField discountField = new TextField("Discount");
-
-        Button saveButton = new Button("Speichern", event -> {
-            Article article = new Article();
-            article.setName(nameField.getValue());
-            article.setNetPrice(Double.parseDouble(priceField.getValue()));
-            article.setTaxRate(Double.parseDouble(taxRateField.getValue()));
-            article.setDescription(descriptionField.getValue());
-            article.setArticleCategory(categoryComboBox.getValue());
-            article.setDailyOffer(dailyOfferCheckbox.getValue());
-            article.setDiscount(Double.parseDouble(discountField.getValue()));
-
-            articleService.saveArticle(article);
-            updateList();
-            dialog.close();
-        });
-
-        Button cancelButton = new Button("Abbrechen", event -> dialog.close());
-        cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-
-        formLayout.add(nameField, priceField, taxRateField, descriptionField, categoryComboBox, dailyOfferCheckbox, discountField, saveButton, cancelButton);
-        dialog.add(formLayout);
-        dialog.open();
-    }
-
-
-    private FormLayout createArticleForm() {
-        FormLayout formLayout = new FormLayout();
-
-        TextField nameField = new TextField("Name");
-        TextField priceField = new TextField("Net Price");
-        TextField taxRateField = new TextField("Tax Rate");
-        TextField descriptionField = new TextField("Description");
-        ComboBox<ArticleCategory> categoryComboBox = new ComboBox<>("Category", ArticleCategory.values());
-        Checkbox dailyOfferCheckbox = new Checkbox("Daily Offer");
-        TextField discountField = new TextField("Discount");
-
-        Button saveButton = new Button("Save", event -> {
-            Article article = new Article();
-            article.setName(nameField.getValue());
-            article.setNetPrice(Double.parseDouble(priceField.getValue()));
-            article.setTaxRate(Double.parseDouble(taxRateField.getValue()));
-            article.setDescription(descriptionField.getValue());
-            article.setArticleCategory(categoryComboBox.getValue());
-            article.setDailyOffer(dailyOfferCheckbox.getValue());
-            article.setDiscount(Double.parseDouble(discountField.getValue()));
-
-            articleService.saveArticle(article);
-            updateList();
-            clearForm(nameField, priceField, taxRateField, descriptionField, categoryComboBox, dailyOfferCheckbox, discountField);
-        });
-
-
-        formLayout.add(nameField, priceField, taxRateField, descriptionField, categoryComboBox, dailyOfferCheckbox, discountField, saveButton);
-        return formLayout;
-    }
-
-    // Methode zum Löschen des Formulars nach dem Speichern
-    private void clearForm(HasValue<?, ?>... fields) {
-        for (HasValue<?, ?> field : fields) {
-            field.clear();
-        }
-    }
 }
