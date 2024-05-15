@@ -16,6 +16,7 @@ import edu.mci.fooddirector.model.domain.Address;
 import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.services.NotificationService;
 import edu.mci.fooddirector.model.services.RegistrationService;
+import edu.mci.fooddirector.model.services.UserService;
 import jakarta.annotation.security.PermitAll;
 
 @Route("register")
@@ -24,7 +25,9 @@ import jakarta.annotation.security.PermitAll;
 @AnonymousAllowed
 public class RegistrationView extends VerticalLayout {
 
-    public RegistrationView(NotificationService notificationService) {
+    private final UserService userService;
+
+    public RegistrationView(NotificationService notificationService, UserService userService) {
         addClassName("registration-view");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
@@ -65,6 +68,9 @@ public class RegistrationView extends VerticalLayout {
 
         Binder<User> binder = new Binder<>(User.class);
 
+        var user = new User();
+        binder.setBean(user);
+
         binder.forField(firstNameField).asRequired("Pflichtfeld").bind(User::getFirstName, User::setFirstName);
         binder.forField(lastNameField).asRequired("Pflichtfeld").bind(User::getLastName, User::setLastName);
         binder.forField(emailField).asRequired("Pflichtfeld").bind(User::getEmail, User::setEmail);
@@ -85,13 +91,16 @@ public class RegistrationView extends VerticalLayout {
 
         registerButton.addClickListener(event -> {
             if (binder.validate().isOk()) {
-                // Save the user object to the database or perform any other necessary actions
+                userService.saveUser(user);
+
                 notificationService.showSuccess("Registrierung erfolgreich");
+                getUI().ifPresent(ui -> ui.navigate(LoginView.class));
             } else {
                 notificationService.showWarning("Bitte die Fehler im Formular korrigieren");
             }
         });
 
         add(title, nameLayout, emailField, passwordLayout, addressInfoLayout, registerButton, backToLoginButton);
+        this.userService = userService;
     }
 }
