@@ -1,10 +1,8 @@
 package edu.mci.fooddirector.views;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -12,18 +10,15 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.cart.CartView;
-import edu.mci.fooddirector.views.helloworld.HelloWorldView;
 import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
-/**
- * The main view is a top-level placeholder for other views.
- */
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
+    private Footer footer;
 
     public MainLayout() {
         setPrimarySection(Section.DRAWER);
@@ -41,13 +36,14 @@ public class MainLayout extends AppLayout {
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
         addToNavbar(true, toggle, viewTitle);
+
+        toggle.addClickListener(event -> updateFooterPosition());
     }
 
     private void addDrawerContent() {
         H1 appName = new H1("Fooddirector");
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
-
 
         var navigation = createNavigation();
         var adminNavigation = createAdminNavigation();
@@ -57,7 +53,6 @@ public class MainLayout extends AppLayout {
         navWrapper.setSizeUndefined();
         navigation.setWidthFull();
         adminNavigation.setWidthFull();
-
 
         Scroller scroller = new Scroller(navWrapper);
         addToDrawer(header, scroller);
@@ -71,10 +66,6 @@ public class MainLayout extends AppLayout {
 
         String activeClass = "active-nav-item";
 
-//        SideNavItem hw = new SideNavItem("HelloWorldView", HelloWorldView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
-//        hw.getElement().getClassList().add(activeClass);
-//        nav.addItem(hw);
-
         SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
         cartNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(cartNavItem);
@@ -82,7 +73,6 @@ public class MainLayout extends AppLayout {
         SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
-
 
         return nav;
     }
@@ -107,15 +97,36 @@ public class MainLayout extends AppLayout {
         Div div = new Div();
         div.addClassNames("footer");
 
-        Footer footer = new Footer();
+        // Social Media Icons
+        Anchor instagram = new Anchor("https://www.instagram.com", LineAwesomeIcon.INSTAGRAM.create());
+        Anchor facebook = new Anchor("https://www.facebook.com", LineAwesomeIcon.FACEBOOK.create());
+        Anchor twitter = new Anchor("https://www.twitter.com", LineAwesomeIcon.TWITTER.create());
+
+        // Footer Texts
+        Anchor impressum = new Anchor("#", "Impressum");
+        Anchor kontakt = new Anchor("#", "Kontakt");
+        Anchor agbs = new Anchor("#", "AGBs");
+
+        div.add(instagram, facebook, twitter, impressum, kontakt, agbs);
+
+        footer = new Footer();
         footer.add(div);
         addToNavbar(false, footer);
+    }
+
+    private void updateFooterPosition() {
+        if (getElement().getClassList().contains("drawer-open")) {
+            getElement().getClassList().remove("drawer-open");
+        } else {
+            getElement().getClassList().add("drawer-open");
+        }
     }
 
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
         viewTitle.setText(getCurrentPageTitle());
+        updateFooterPosition();
     }
 
     private String getCurrentPageTitle() {
