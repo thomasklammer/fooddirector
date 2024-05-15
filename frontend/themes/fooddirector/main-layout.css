@@ -36,8 +36,8 @@ vaadin-side-nav-item vaadin-icon {
 .footer {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: var(--drawer-width);
+  width: calc(100% - var(--drawer-width));
   height: 80px;
   background-color: var(--footer-bg-color);
   color: var(--footer-text-color);
@@ -62,6 +62,11 @@ vaadin-side-nav-item vaadin-icon {
 .drawer-open .footer {
   left: var(--drawer-width);
   width: calc(100% - var(--drawer-width));
+}
+
+.drawer-closed .footer {
+  left: 0;
+  width: 100%;
 }
 
 /* Side navigation styling */

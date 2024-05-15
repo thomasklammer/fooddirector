@@ -1,3 +1,4 @@
+
 package edu.mci.fooddirector.views;
 
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -15,6 +16,9 @@ import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
+/**
+ * The main view is a top-level placeholder for other views.
+ */
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
@@ -74,6 +78,7 @@ public class MainLayout extends AppLayout {
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
 
+
         return nav;
     }
 
@@ -89,6 +94,7 @@ public class MainLayout extends AppLayout {
         SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
         reportNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(reportNavItem);
+
 
         return adminNav;
     }
@@ -115,10 +121,10 @@ public class MainLayout extends AppLayout {
     }
 
     private void updateFooterPosition() {
-        if (getElement().getClassList().contains("drawer-open")) {
-            getElement().getClassList().remove("drawer-open");
+        if (getElement().getClassList().contains("drawer-closed")) {
+            getElement().getClassList().remove("drawer-closed");
         } else {
-            getElement().getClassList().add("drawer-open");
+            getElement().getClassList().add("drawer-closed");
         }
     }
 
@@ -126,7 +132,7 @@ public class MainLayout extends AppLayout {
     protected void afterNavigation() {
         super.afterNavigation();
         viewTitle.setText(getCurrentPageTitle());
-        updateFooterPosition();
+        //updateFooterPosition();
     }
 
     private String getCurrentPageTitle() {
