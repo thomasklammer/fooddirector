@@ -125,6 +125,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <!-- iText PDF dependency -->
         <dependency>
             <groupId>com.itextpdf</groupId>
