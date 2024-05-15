@@ -32,14 +32,14 @@ public class SecurityConfig extends VaadinWebSecurity {
 
     @Bean
     protected UserDetailsService userDetailsService(){
-        UserDetails user = User.withUsername("user")
-                .password("{noop}userpass")
+        UserDetails user = User.withUsername("test@test.at")
+                .password("{noop}123456")
                 .roles("USER")
                 .build();
 
-        UserDetails admin = User.withUsername("admin")
-                .password("{noop}admin")
-                .roles("Admin")
+        UserDetails admin = User.withUsername("admin@test.at")
+                .password("{noop}123456")
+                .roles("ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user,admin);

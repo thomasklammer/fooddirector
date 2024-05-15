@@ -1,4 +1,3 @@
-
 package edu.mci.fooddirector.views;
 
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -13,6 +12,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.security.SecurityService;
 import edu.mci.fooddirector.views.cart.CartView;
 import edu.mci.fooddirector.views.menu.MenuAdminView;
@@ -30,11 +30,13 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
+    private final UserService userService;
     private H2 viewTitle;
     private Footer footer;
 
-    public MainLayout(SecurityService securityService) {
+    public MainLayout(SecurityService securityService, UserService userService) {
         this.securityService = securityService;
+        this.userService = userService;
         setPrimarySection(Section.DRAWER);
 
         addHeaderContent();
@@ -51,8 +53,7 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        Button logout = new Button("Logout", e ->securityService.logout());
-
+        Button logout = new Button("Logout", e -> securityService.logout());
 
 
         H1 logo = new H1("Fooddirector - Gruppe 5");
@@ -61,9 +62,7 @@ public class MainLayout extends AppLayout {
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.expand(logo); // <4>
         header.setWidthFull();
-        header.addClassNames(
-                LumoUtility.Padding.Vertical.NONE,
-                LumoUtility.Padding.Horizontal.MEDIUM);
+        header.addClassNames(LumoUtility.Padding.Vertical.NONE, LumoUtility.Padding.Horizontal.MEDIUM);
 
         addToNavbar(header);
 
@@ -71,14 +70,23 @@ public class MainLayout extends AppLayout {
     }
 
     private void addDrawerContent() {
-         var navigation = createNavigation();
-        var adminNavigation = createAdminNavigation();
+        var navigation = createNavigation();
 
-        VerticalLayout navWrapper = new VerticalLayout(navigation, adminNavigation);
+        var currentUser = userService.getCurrentUser();
+
+        VerticalLayout navWrapper;
+        if (currentUser.isPresent() && currentUser.get().isAdmin()) {
+            var adminNavigation = createAdminNavigation();
+            adminNavigation.setWidthFull();
+            navWrapper = new VerticalLayout(navigation, adminNavigation);
+        } else {
+            navWrapper = new VerticalLayout(navigation);
+        }
+
         navWrapper.setSpacing(true);
         navWrapper.setSizeUndefined();
         navigation.setWidthFull();
-        adminNavigation.setWidthFull();
+
 
         Scroller scroller = new Scroller(navWrapper);
         addToDrawer(scroller);
@@ -105,10 +113,11 @@ public class MainLayout extends AppLayout {
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
 
-      
+
         return nav;
     }
-      private SideNav createAdminNavigation() {
+
+    private SideNav createAdminNavigation() {
         SideNav adminNav = new SideNav();
         adminNav.setLabel("Admin");
         adminNav.setCollapsible(true);
@@ -122,9 +131,9 @@ public class MainLayout extends AppLayout {
         menuManagementNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(menuManagementNavItem);
 
-          SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.CHART_PIE_SOLID.create());
-          reportNavItem.getElement().getClassList().add("active-nav-item");
-          adminNav.addItem(reportNavItem);
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.CHART_PIE_SOLID.create());
+        reportNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(reportNavItem);
 
         return adminNav;
     }

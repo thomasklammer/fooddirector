@@ -3,6 +3,7 @@ package edu.mci.fooddirector.model.services;
 import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +31,15 @@ public class UserService{
     }
 
     public Optional<User> getCurrentUser() {
-        return findAll().stream().findFirst();
+
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = auth.getName();
+
+        if(currentPrincipalName.isBlank()) {
+            return Optional.empty();
+        }
+
+        return userRepository.findByEmail(currentPrincipalName);
+
     }
 }
