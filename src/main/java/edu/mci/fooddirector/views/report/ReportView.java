@@ -124,7 +124,7 @@ public class ReportView extends VerticalLayout {
         conf.addSeries(series1);
         conf.addSeries(series2);
 
-        // Create export button
+
         Button csvButton = new Button("Export as CSV", event -> exportToCsv(months, monthlySales, monthlyOrders));
 
         // Add components to the layout
@@ -132,6 +132,8 @@ public class ReportView extends VerticalLayout {
         add(chart);
         add(csvButton);
     }
+
+
 
     private void exportToCsv(String[] months, Number[] values1, Number[] values2) {
         try {

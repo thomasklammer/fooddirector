@@ -1,0 +1,64 @@
+.menu-view {
+    margin: 0 auto;
+    max-width: 960px;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.specials-layout img {
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+.text-md {
+    font-size: 1rem; /* Adjust size as needed */
+}
+
+.text-lg {
+    font-size: 1.2rem; /* Adjust size as needed */
+}
+
+.price-label {
+    font-weight: bold;
+    color: #4CAF50; /* Adjust color as needed */
+}
+
+.category-button {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.category-button:hover {
+    background-color: #f0f0f0;
+}
+
+button.addClassName("category-button");
+
+.menu-view .button {
+    margin-bottom: 5px;  // Space between buttons
+}
+
+.menu-view .vertical-layout {
+    background: #f9f9f9;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.menu-view .category-layout button {
+    margin-bottom: 10px; /* Space between buttons */
+    text-align: left; /* Align text to the left */
+}
+
+.menu-view .category-layout {
+    background: #f9f9f9;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
