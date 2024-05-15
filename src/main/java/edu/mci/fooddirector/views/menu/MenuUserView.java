@@ -12,6 +12,7 @@ import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.ArticleService;
 import edu.mci.fooddirector.model.services.CartService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Route(value = "menu", layout = MainLayout.class)
 @PageTitle("Speisekarte")
+@PermitAll
 public class MenuUserView extends VerticalLayout {
 
     private final ArticleService articleService;

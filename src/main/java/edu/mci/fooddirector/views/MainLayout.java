@@ -103,23 +103,7 @@ public class MainLayout extends AppLayout {
       
         return nav;
     }
-     private SideNav createAdminNavigation() {
-        SideNav adminNav = new SideNav();
-        adminNav.setLabel("Admin");
-        adminNav.setCollapsible(true);
-
-        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
-        ordersNavItem.getElement().getClassList().add("active-nav-item");
-        adminNav.addItem(ordersNavItem);
-
-        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
-        reportNavItem.getElement().getClassList().add("active-nav-item");
-        adminNav.addItem(reportNavItem);
-
-        return adminNav;
-    }
-
-    private SideNav createAdminNavigation() {
+      private SideNav createAdminNavigation() {
         SideNav adminNav = new SideNav();
         adminNav.setLabel("Admin");
         adminNav.setCollapsible(true);
