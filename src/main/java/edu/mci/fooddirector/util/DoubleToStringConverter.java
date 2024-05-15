@@ -4,13 +4,22 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public  class DoubleToStringConverter {
-    public static String ConvertToCurrency(double value) {
+    public static String convertToCurrency(double value) {
+        var formattedNumber = convert(value);
+        return formattedNumber + " €";
+    }
+
+    public static String convertToPercentage(double value) {
+        var formattedNumber = convert(value);
+        return formattedNumber + " %";
+    }
+
+    public static String convert(double value) {
         Locale locale = Locale.getDefault();
         NumberFormat numberFormat = NumberFormat.getInstance(locale);
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(2);
-        String formattedNumber = numberFormat.format(value);
 
-        return formattedNumber + " €";
+        return numberFormat.format(value);
     }
 }

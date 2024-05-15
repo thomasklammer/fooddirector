@@ -1,6 +1,5 @@
 package edu.mci.fooddirector.views.orders;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -18,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-@PageTitle("Admin Bestellungen")
+@PageTitle("Admin Bestellungen | Fooddirector")
 @Route(value = "Adminorders", layout = MainLayout.class)
 @PermitAll
 public class AdminOrdersView extends Div {

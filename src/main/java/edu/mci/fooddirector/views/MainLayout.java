@@ -5,9 +5,6 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.map.configuration.style.Icon;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -16,16 +13,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.security.SecurityService;
 import edu.mci.fooddirector.views.cart.CartView;
-import edu.mci.fooddirector.views.helloworld.HelloWorldView;
 import edu.mci.fooddirector.views.menu.MenuAdminView;
 import edu.mci.fooddirector.views.menu.MenuUserView;
 import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -91,17 +84,18 @@ public class MainLayout extends AppLayout {
         String activeClass = "active-nav-item";
 
 
+        SideNavItem menuNavItem = new SideNavItem("Speisekarte", MenuUserView.class, LineAwesomeIcon.UTENSILS_SOLID.create());
+        menuNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(menuNavItem);
+
         SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
         cartNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(cartNavItem);
 
-        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.FOLDER_SOLID.create());
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
 
-        SideNavItem menuNavItem = new SideNavItem("Speisekarte", MenuUserView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
-        menuNavItem.getElement().getClassList().add(activeClass);
-        nav.addItem(menuNavItem);
       
         return nav;
     }
@@ -110,17 +104,18 @@ public class MainLayout extends AppLayout {
         adminNav.setLabel("Admin");
         adminNav.setCollapsible(true);
 
-        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.FOLDER_SOLID.create());
         ordersNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(ordersNavItem);
 
-        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
-        reportNavItem.getElement().getClassList().add("active-nav-item");
-        adminNav.addItem(reportNavItem);
 
-        SideNavItem menuManagementNavItem = new SideNavItem("Speisekarte Management", MenuAdminView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        SideNavItem menuManagementNavItem = new SideNavItem("Speisekarte Management", MenuAdminView.class, LineAwesomeIcon.UTENSILS_SOLID.create());
         menuManagementNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(menuManagementNavItem);
+
+          SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.CHART_PIE_SOLID.create());
+          reportNavItem.getElement().getClassList().add("active-nav-item");
+          adminNav.addItem(reportNavItem);
 
         return adminNav;
     }

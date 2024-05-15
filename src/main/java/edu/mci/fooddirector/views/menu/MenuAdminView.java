@@ -14,32 +14,31 @@ import com.vaadin.flow.router.Route;
 import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.ArticleService;
+import edu.mci.fooddirector.model.services.NotificationService;
+import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.notification.Notification;
+
 import java.util.List;
 
 @Route(value = "admin/articles", layout = MainLayout.class)
-@PageTitle("Speisekarte Management")
+@PageTitle("Speisekarte Management | Fooddirector")
 @PermitAll
 public class MenuAdminView extends VerticalLayout {
 
     private final ArticleService articleService;
+    private final NotificationService notificationService;
     private Grid<Article> grid = new Grid<>(Article.class);
 
 
 
 
     @Autowired
-    public MenuAdminView(ArticleService articleService) {
+    public MenuAdminView(ArticleService articleService, NotificationService notificationService) {
+        this.notificationService = notificationService;
         this.articleService = articleService;
         setSizeFull();
 
@@ -70,12 +69,12 @@ public class MenuAdminView extends VerticalLayout {
         grid.removeAllColumns();
 
         grid.addColumn(Article::getName).setHeader("Name");
-        grid.addColumn(Article::getNetPrice).setHeader("Net Price");
-        grid.addColumn(Article::getTaxRate).setHeader("Tax Rate");
-        grid.addColumn(Article::getDescription).setHeader("Description");
-        grid.addColumn(article -> article.getArticleCategory().toString()).setHeader("Category");
-        grid.addColumn(Article::isDailyOffer).setHeader("Daily Offer");
-        grid.addColumn(Article::getDiscount).setHeader("Discount");
+        grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getNetPrice())).setHeader("Nettopreis");
+        grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getTaxRate())).setHeader("Steuer");
+        grid.addColumn(Article::getDescription).setHeader("Beschreibung");
+        grid.addColumn(article -> article.getArticleCategory().toString()).setHeader("Kategorie");
+        grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
+        grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getDiscount())).setHeader("Rabatt");
 
         grid.addComponentColumn(article -> createEditButton(article)).setHeader("Actions");
     }
@@ -97,15 +96,14 @@ public class MenuAdminView extends VerticalLayout {
         try {
             List<Article> articles = articleService.findAll();
             if (articles.isEmpty()) {
-                Notification.show("Keine Artikel gefunden.");
+                notificationService.showWarning("Keine Artikel gefunden.");
             } else {
                 grid.setItems(articles);
                 grid.getDataProvider().refreshAll();
                 System.out.println("Artikel erfolgreich geladen und im Grid gesetzt.");
             }
         } catch (Exception e) {
-            Notification.show("Fehler beim Laden der Artikel: " + e.getMessage());
-            e.printStackTrace();
+            notificationService.showError("Fehler beim Laden der Artikel: " + e.getMessage());
         }
     }
 

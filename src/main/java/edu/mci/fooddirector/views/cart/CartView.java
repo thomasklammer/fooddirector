@@ -45,7 +45,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
-import edu.mci.fooddirector.views.login.RegistrationView;
 import jakarta.annotation.security.PermitAll;
 
 import java.time.LocalDateTime;
@@ -188,9 +187,9 @@ public class CartView extends VerticalLayout {
     private void updateSummary() {
         summaryList.removeAll();
 
-        summaryList.add(createSummaryListItem("Zwischensumme", DoubleToStringConverter.ConvertToCurrency(cart.getPrice()), false));
-        summaryList.add(createSummaryListItem("Lieferung", DoubleToStringConverter.ConvertToCurrency(cart.getDeliveryCosts()), false));
-        summaryList.add(createSummaryListItem("Gesamt (inkl. MwSt.)", DoubleToStringConverter.ConvertToCurrency(cart.getTotalPrice()), true));
+        summaryList.add(createSummaryListItem("Zwischensumme", DoubleToStringConverter.convertToCurrency(cart.getPrice()), false));
+        summaryList.add(createSummaryListItem("Lieferung", DoubleToStringConverter.convertToCurrency(cart.getDeliveryCosts()), false));
+        summaryList.add(createSummaryListItem("Gesamt (inkl. MwSt.)", DoubleToStringConverter.convertToCurrency(cart.getTotalPrice()), true));
     }
 
     private Section createPaymentMethods() {
@@ -403,7 +402,7 @@ public class CartView extends VerticalLayout {
 
 
         var price = cartItem.getArticle().getGrossPriceDiscounted() * cartItem.getAmount();
-        Span priceSpan = new Span(DoubleToStringConverter.ConvertToCurrency(price));
+        Span priceSpan = new Span(DoubleToStringConverter.convertToCurrency(price));
 
         TextField amount = new TextField();
         amount.setWidth("50px");
