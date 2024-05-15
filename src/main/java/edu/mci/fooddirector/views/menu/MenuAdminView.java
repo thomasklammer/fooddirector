@@ -43,6 +43,8 @@ public class MenuAdminView extends VerticalLayout {
         this.articleService = articleService;
         setSizeFull();
 
+        addClassName("padding-bottom");
+
         Button addArticleButton = new Button("Neuen Artikel anlegen", e -> openCreateArticleDialog());
         addArticleButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 

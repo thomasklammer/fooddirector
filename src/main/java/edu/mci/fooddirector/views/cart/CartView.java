@@ -84,6 +84,7 @@ public class CartView extends VerticalLayout {
         this.orderService = orderService;
         this.userService = userService;
 
+
         var user = userService.getCurrentUser();
 
         if(user.isEmpty()) {
@@ -94,6 +95,8 @@ public class CartView extends VerticalLayout {
         }
 
         addClassNames("cart");
+        addClassName("padding-bottom");
+
         content = new Main();
         content.addClassNames("cart-grid", Gap.XLARGE, AlignItems.START, JustifyContent.EVENLY, MaxWidth.FULL);
 

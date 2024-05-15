@@ -41,9 +41,11 @@ public class MainLayout extends AppLayout {
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
         setPrimarySection(Section.DRAWER);
-        addDrawerContent();
+
         addHeaderContent();
+        addDrawerContent();
         createFooter();
+
         getStyle().set("background-color", "#FBF7EF");
     }
 
@@ -163,4 +165,5 @@ public class MainLayout extends AppLayout {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
+
 }
