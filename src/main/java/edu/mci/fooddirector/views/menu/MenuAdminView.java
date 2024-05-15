@@ -76,7 +76,7 @@ public class MenuAdminView extends VerticalLayout {
         grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
         grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getDiscount())).setHeader("Rabatt");
 
-        grid.addComponentColumn(article -> createEditButton(article)).setHeader("Actions");
+        grid.addComponentColumn(article -> createEditButton(article)).setHeader("Aktionen");
     }
 
     private Grid<Article> createArticleGrid() {
@@ -87,7 +87,7 @@ public class MenuAdminView extends VerticalLayout {
 
 
     private Button createEditButton(Article article) {
-        Button editButton = new Button("Edit", event -> openEditDialog(article));
+        Button editButton = new Button("Bearbeiten", event -> openEditDialog(article));
         editButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         return editButton;
     }
@@ -114,25 +114,25 @@ public class MenuAdminView extends VerticalLayout {
         TextField nameField = new TextField("Name");
         nameField.setValue(article.getName());
 
-        TextField priceField = new TextField("Net Price");
+        TextField priceField = new TextField("Netto Preis");
         priceField.setValue(String.valueOf(article.getNetPrice()));
 
-        TextField taxRateField = new TextField("Tax Rate");
+        TextField taxRateField = new TextField("Steuer");
         taxRateField.setValue(String.valueOf(article.getTaxRate()));
 
-        TextField descriptionField = new TextField("Description");
+        TextField descriptionField = new TextField("Beschreibung");
         descriptionField.setValue(article.getDescription());
 
-        ComboBox<ArticleCategory> categoryComboBox = new ComboBox<>("Category", ArticleCategory.values());
+        ComboBox<ArticleCategory> categoryComboBox = new ComboBox<>("Kategorie", ArticleCategory.values());
         categoryComboBox.setValue(article.getArticleCategory());
 
-        Checkbox dailyOfferCheckbox = new Checkbox("Daily Offer");
+        Checkbox dailyOfferCheckbox = new Checkbox("Tagesangebot");
         dailyOfferCheckbox.setValue(article.isDailyOffer());
 
-        TextField discountField = new TextField("Discount");
+        TextField discountField = new TextField("Rabatt");
         discountField.setValue(String.valueOf(article.getDiscount()));
 
-        Button saveButton = new Button("Save", e -> {
+        Button saveButton = new Button("Speichern", e -> {
             article.setName(nameField.getValue());
             article.setNetPrice(Double.parseDouble(priceField.getValue()));
             article.setTaxRate(Double.parseDouble(taxRateField.getValue()));
