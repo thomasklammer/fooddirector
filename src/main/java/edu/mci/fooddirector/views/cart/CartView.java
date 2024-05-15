@@ -2,12 +2,14 @@ package edu.mci.fooddirector.views.cart;
 
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.dom.Style;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -62,7 +64,6 @@ public class CartView extends VerticalLayout {
     private final CartService cartService;
     private final NotificationService notificationService;
     private final OrderService orderService;
-    private final UserService userService;
 
 
     private UnorderedList summaryList;
@@ -81,7 +82,6 @@ public class CartView extends VerticalLayout {
         this.cartService = cartService;
         this.notificationService = notificationService;
         this.orderService = orderService;
-        this.userService = userService;
 
 
         var user = userService.getCurrentUser();
@@ -146,6 +146,7 @@ public class CartView extends VerticalLayout {
 
         for (var cartItem : cart.getCartItems()) {
             ul.add(createListItem(cartItem));
+            ul.add(new Hr());
         }
 
 
@@ -390,10 +391,13 @@ public class CartView extends VerticalLayout {
 
     private ListItem createListItem(CartItem cartItem) {
         ListItem item = new ListItem();
-        item.addClassNames(Display.FLEX, JustifyContent.BETWEEN);
+        item.addClassNames(Display.FLEX, FlexDirection.ROW, JustifyContent.BETWEEN);
+        item.setMaxWidth("1000px");
+
 
         Div subSection = new Div();
         subSection.addClassNames(Display.FLEX, FlexDirection.COLUMN);
+        subSection.setWidth("400px");
 
         subSection.add(new Span(cartItem.getArticle().getName()));
         Span secondarySpan = new Span(cartItem.getArticle().getDescription());
@@ -403,10 +407,12 @@ public class CartView extends VerticalLayout {
 
         var price = cartItem.getArticle().getGrossPriceDiscounted() * cartItem.getAmount();
         Span priceSpan = new Span(DoubleToStringConverter.convertToCurrency(price));
+        priceSpan.addClassNames(Style.TextAlign.RIGHT.name());
+
 
         TextField amount = new TextField();
         amount.setWidth("50px");
-        amount.setEnabled(false);
+        amount.setReadOnly(true);
         amount.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
         amount.setValue(String.valueOf(cartItem.getAmount()));
 

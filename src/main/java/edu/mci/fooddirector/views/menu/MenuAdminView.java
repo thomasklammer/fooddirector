@@ -15,6 +15,7 @@ import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.ArticleService;
 import edu.mci.fooddirector.model.services.NotificationService;
+import edu.mci.fooddirector.util.ArticleCategoryToStringConverter;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
@@ -76,7 +77,7 @@ public class MenuAdminView extends VerticalLayout {
         grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getNetPrice())).setHeader("Nettopreis");
         grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getTaxRate())).setHeader("Steuer");
         grid.addColumn(Article::getDescription).setHeader("Beschreibung");
-        grid.addColumn(article -> article.getArticleCategory().toString()).setHeader("Kategorie");
+        grid.addColumn(article -> ArticleCategoryToStringConverter.convert(article.getArticleCategory())).setHeader("Kategorie");
         grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
         grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getDiscount())).setHeader("Rabatt");
 

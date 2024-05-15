@@ -9,7 +9,6 @@ import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -18,6 +17,7 @@ import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.ArticleService;
 import edu.mci.fooddirector.model.services.CartService;
 import edu.mci.fooddirector.model.services.NotificationService;
+import edu.mci.fooddirector.util.ArticleCategoryToStringConverter;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
@@ -40,7 +40,7 @@ public class MenuUserView extends VerticalLayout {
     private final NotificationService notificationService;
     private final Grid<Article> grid = new Grid<>(Article.class);
 
-    private VerticalLayout categoryFilters;
+    private final VerticalLayout categoryFilters;
 
 
     public MenuUserView(ArticleService articleService,
@@ -56,22 +56,22 @@ public class MenuUserView extends VerticalLayout {
 
         categoryFilters = createCategoryFilters(); // Ensure this is initialized first
         categoryFilters.setWidth("200px");
+        highlightActiveCategory(ArticleCategory.MainDish);
 
         configureGrid();
         updateList();
 
 
-
         HorizontalLayout mainLayout = new HorizontalLayout(categoryFilters, grid);
         mainLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         mainLayout.setSizeFull();
-        mainLayout.expand(grid); // This makes the grid take up the remaining space
+        mainLayout.expand(grid);
 
         add(createHeader("Tagesangebote"));
         add(createDailySpecials());
         add(new Hr());
         add(createHeader("Speisekarte"));
-        add(mainLayout); // Only add mainLayout which contains both categoryFilters and grid
+        add(mainLayout);
     }
 
 
@@ -87,7 +87,7 @@ public class MenuUserView extends VerticalLayout {
     private Component createDailySpecials() {
         List<Article> dailyOffers = articleService.findAll().stream()
                 .filter(Article::isDailyOffer)
-                .collect(Collectors.toList());
+                .toList();
 
         HorizontalLayout specialsLayout = new HorizontalLayout();
         specialsLayout.setWidthFull();
@@ -95,23 +95,19 @@ public class MenuUserView extends VerticalLayout {
         specialsLayout.setPadding(true);
 
         for (Article offer : dailyOffers) {
-            specialsLayout.add(createSpecial(offer.getName() + " - " + offer.getDescription(), offer.getGrossPriceDiscounted(), "path/to/image.jpg")); // Adjust image path accordingly
+            specialsLayout.add(createSpecial(offer.getName() + " - " + offer.getDescription(), offer.getGrossPriceDiscounted())); // Adjust image path accordingly
         }
 
         return specialsLayout;
     }
 
 
-    private Component createSpecial(String description, double price, String imageUrl) {
+    private Component createSpecial(String description, double price) {
         VerticalLayout layout = new VerticalLayout();
         layout.setAlignItems(Alignment.CENTER);
         layout.setPadding(false);
         layout.setSpacing(false);
 
-        // Image handling
-//        Image image = new Image(imageUrl, "menu item image");
-//        image.setMaxHeight("150px");  // Set the maximum height for images
-//        image.getStyle().set("border-radius", "8px");  // Optional: style images with rounded corners
 
         // Description as a label
         Span descLabel = new Span(description);
@@ -133,8 +129,9 @@ public class MenuUserView extends VerticalLayout {
         layout.setSpacing(true);
         layout.setWidthFull();
 
+
         for (ArticleCategory category : ArticleCategory.values()) {
-            Button button = new Button(category.toString(), e -> {
+            Button button = new Button(ArticleCategoryToStringConverter.convert(category), e -> {
                 updateListByCategory(category);
                 highlightActiveCategory(category);
             });
@@ -142,6 +139,7 @@ public class MenuUserView extends VerticalLayout {
             button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             layout.add(button);
         }
+
         return layout;
     }
 
@@ -174,14 +172,6 @@ public class MenuUserView extends VerticalLayout {
         return new HorizontalLayout(quantitySelector, addToCartButton);
     }
 
-    private void addFilterButtons() {
-        Select<ArticleCategory> categoryFilter = new Select<>();
-        categoryFilter.setLabel("Kategorie");
-        categoryFilter.setItems(ArticleCategory.values());
-        categoryFilter.setEmptySelectionAllowed(true);
-        categoryFilter.addValueChangeListener(e -> updateListByCategory(e.getValue()));
-        add(categoryFilter);
-    }
 
     private void updateList() {
         grid.setItems(articleService.findAll());
@@ -191,21 +181,7 @@ public class MenuUserView extends VerticalLayout {
         }
     }
 
-    /*private HorizontalLayout createCategoryFilters() {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.setWidthFull();
-        layout.setPadding(true);
-        layout.setJustifyContentMode(JustifyContentMode.START);
 
-        for (ArticleCategory category : ArticleCategory.values()) {
-            Button button = new Button(category.toString());
-            button.addClickListener(e -> updateListByCategory(category));
-            button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-            layout.add(button);
-        }
-
-        return layout;
-    }*/
 
     private void updateListByCategory(ArticleCategory category) {
         List<Article> filteredArticles = articleService.findAll().stream()

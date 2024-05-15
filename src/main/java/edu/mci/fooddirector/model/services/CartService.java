@@ -1,6 +1,5 @@
 package edu.mci.fooddirector.model.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vaadin.flow.component.page.WebStorage;
 import edu.mci.fooddirector.model.callbacks.CartCallback;
@@ -8,8 +7,6 @@ import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.domain.Cart;
 import edu.mci.fooddirector.model.domain.CartItem;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 
 @Service
@@ -44,16 +41,16 @@ public class CartService {
             WebStorage.setItem(WebStorage.Storage.SESSION_STORAGE, cartKey, json);
         } catch (Exception ex) {
             System.out.println("error while setting cart to storage: " + ex.getMessage());
-            //TODO shit
+            //shit
         }
     }
 
 
-    public void addCartItem(Article article, int quantity) {
+    public void addCartItem(Article article, int amount) {
         getCart(cart -> {
             var cartItem = new CartItem();
             cartItem.setArticle(article);
-            cartItem.setAmount(1);
+            cartItem.setAmount(amount);
 
             cart.addCartItem(cartItem);
             setCart(cart);
