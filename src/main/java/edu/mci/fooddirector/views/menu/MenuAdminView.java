@@ -66,7 +66,7 @@ public class MenuAdminView extends VerticalLayout {
 
     private void configureGrid() {
         grid.removeAllColumns();
-
+        grid.setHeight("auto");
         grid.addColumn(Article::getName).setHeader("Name");
         grid.addColumn(Article::getNetPrice).setHeader("Net Price");
         grid.addColumn(Article::getTaxRate).setHeader("Tax Rate");

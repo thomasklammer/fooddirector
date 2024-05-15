@@ -1,9 +1,6 @@
 package edu.mci.fooddirector.views.report;
 
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -130,38 +127,17 @@ public class ReportView extends VerticalLayout {
         conf.addSeries(series2);
 
         // Create export buttons
-        Button pdfButton = new Button("Export as PDF", event -> exportToPdf(months, monthlySales, monthlyOrders));
+
         Button csvButton = new Button("Export as CSV", event -> exportToCsv(months, monthlySales, monthlyOrders));
 
         // Add components to the layout
         add(header);
         add(chart);
-        add(pdfButton);
+
         add(csvButton);
     }
 
-    private void exportToPdf(String[] months, Number[] values1, Number[] values2) {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PdfWriter writer = new PdfWriter(outputStream);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
 
-            document.add(new Paragraph("Monatsbericht"));
-            for (int i = 0; i < months.length; i++) {
-                document.add(new Paragraph(months[i] + ": €" + values1[i].toString() + ", Bestellungen: " + values2[i].toString()));
-            }
-
-            document.close();
-
-            StreamResource resource = new StreamResource("report.pdf", () -> new ByteArrayInputStream(outputStream.toByteArray()));
-            Anchor downloadLink = new Anchor(resource, "Download PDF");
-            downloadLink.getElement().setAttribute("download", true);
-            add(downloadLink);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void exportToCsv(String[] months, Number[] values1, Number[] values2) {
         try {
