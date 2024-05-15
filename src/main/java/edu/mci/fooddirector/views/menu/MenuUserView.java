@@ -6,7 +6,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -51,34 +53,38 @@ public class MenuUserView extends VerticalLayout {
 
         this.articleService = articleService;
         this.cartService = cartService;
+        this.notificationService = notificationService;
         addClassName("menu-view");
         addClassName("padding-bottom");
         setSizeFull();
 
         categoryFilters = createCategoryFilters(); // Ensure this is initialized first
-        categoryFilters.getStyle().set("border-right", "1px solid #ccc");
         categoryFilters.setWidth("200px");
 
         configureGrid();
         updateList();
 
 
+
         HorizontalLayout mainLayout = new HorizontalLayout(categoryFilters, grid);
+        mainLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
         mainLayout.setSizeFull();
         mainLayout.expand(grid); // This makes the grid take up the remaining space
 
-        add(createHeader());
+        add(createHeader("Tagesangebote"));
         add(createDailySpecials());
+        add(new Hr());
+        add(createHeader("Speisekarte"));
         add(mainLayout); // Only add mainLayout which contains both categoryFilters and grid
     }
 
 
 
-    private Component createHeader() {
+    private Component createHeader(String content) {
         HorizontalLayout header = new HorizontalLayout();
         header.setWidthFull();
         header.setJustifyContentMode(JustifyContentMode.CENTER);
-        header.add(new H1("TAGESANGEBOT"));
+        header.add(new H1(content));
         return header;
     }
 
@@ -97,9 +103,6 @@ public class MenuUserView extends VerticalLayout {
         }
 
         return specialsLayout;
-
-        add(grid);
-        this.notificationService = notificationService;
     }
 
 
@@ -110,20 +113,20 @@ public class MenuUserView extends VerticalLayout {
         layout.setSpacing(false);
 
         // Image handling
-        Image image = new Image(imageUrl, "menu item image");
-        image.setMaxHeight("150px");  // Set the maximum height for images
-        image.getStyle().set("border-radius", "8px");  // Optional: style images with rounded corners
+//        Image image = new Image(imageUrl, "menu item image");
+//        image.setMaxHeight("150px");  // Set the maximum height for images
+//        image.getStyle().set("border-radius", "8px");  // Optional: style images with rounded corners
 
         // Description as a label
         Span descLabel = new Span(description);
         descLabel.addClassNames("text-center", "text-md");  // Use helper classes for styling
 
         // Price label
-        Span priceLabel = new Span(String.format("%.2f€", price));
+        Span priceLabel = new Span(DoubleToStringConverter.convertToCurrency(price));
         priceLabel.addClassNames("text-center", "text-lg", "price-label");  // Additional class for price styling
 
         // Add components to the layout
-        layout.add(image, descLabel, priceLabel);
+        layout.add(descLabel, priceLabel);
 
         return layout;
     }
@@ -151,15 +154,13 @@ public class MenuUserView extends VerticalLayout {
     private void configureGrid() {
         grid.removeAllColumns();
         grid.setHeight("auto");
-        grid.addColumn(Article::getName).setHeader("Artikel");
-        grid.addColumn(Article::getDescription).setHeader("Beschreibung");
+        grid.addColumn(Article::getName).setHeader("Artikel").setAutoWidth(true);
+        grid.addColumn(Article::getDescription).setHeader("Beschreibung").setAutoWidth(true);
 
-        grid.addColumn(Article::getNetPrice).setHeader("Preis").setAutoWidth(true);
-        grid.addComponentColumn(this::createAddToCartComponent).setHeader("Anzahl").setAutoWidth((true));
-        grid.getStyle().set("border", "none");
 
         grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getGrossPriceDiscounted())).setHeader("Preis").setAutoWidth(true);
-        grid.addComponentColumn(this::createAddToCartComponent).setHeader("");
+        grid.addComponentColumn(this::createAddToCartComponent).setHeader("Anzahl").setAutoWidth((true)).setAutoWidth(true);
+        grid.getStyle().set("border", "none");
     }
 
 
