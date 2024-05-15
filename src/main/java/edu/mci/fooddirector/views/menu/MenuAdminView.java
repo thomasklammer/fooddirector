@@ -74,7 +74,7 @@ public class MenuAdminView extends VerticalLayout {
         grid.addColumn(Article::getDescription).setHeader("Beschreibung");
         grid.addColumn(article -> article.getArticleCategory().toString()).setHeader("Kategorie");
         grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
-        grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getDiscount())).setHeader("Rabatt");
+        grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getDiscount())).setHeader("Rabatt");
 
         grid.addComponentColumn(article -> createEditButton(article)).setHeader("Aktionen");
     }

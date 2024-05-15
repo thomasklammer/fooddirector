@@ -5,6 +5,8 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -49,20 +51,27 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        Button logout = new Button("Log out", e ->securityService.logout());
+        Button logout = new Button("Logout", e ->securityService.logout());
 
-        addToNavbar(true, toggle, viewTitle, logout);
-        addToNavbar(true, toggle, viewTitle);
+
+
+        H1 logo = new H1("Fooddirector - Gruppe 5");
+        var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+
+        header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        header.expand(logo); // <4>
+        header.setWidthFull();
+        header.addClassNames(
+                LumoUtility.Padding.Vertical.NONE,
+                LumoUtility.Padding.Horizontal.MEDIUM);
+
+        addToNavbar(header);
 
         toggle.addClickListener(event -> updateFooterPosition());
     }
 
     private void addDrawerContent() {
-        H1 appName = new H1("Fooddirector");
-        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-        Header header = new Header(appName);
-
-        var navigation = createNavigation();
+         var navigation = createNavigation();
         var adminNavigation = createAdminNavigation();
 
         VerticalLayout navWrapper = new VerticalLayout(navigation, adminNavigation);
@@ -72,7 +81,7 @@ public class MainLayout extends AppLayout {
         adminNavigation.setWidthFull();
 
         Scroller scroller = new Scroller(navWrapper);
-        addToDrawer(header, scroller);
+        addToDrawer(scroller);
     }
 
     private SideNav createNavigation() {
