@@ -28,6 +28,7 @@ public class AdminOrdersView extends Div {
 
         VerticalLayout layout = new VerticalLayout();
         layout.setClassName("custom-span");
+        addClassName("padding-bottom");
         layout.setSpacing(false);
 
         List<Order> orders = orderService.findAll();

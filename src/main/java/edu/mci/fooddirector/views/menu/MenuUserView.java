@@ -34,6 +34,7 @@ public class MenuUserView extends VerticalLayout {
         this.articleService = articleService;
         this.cartService = cartService;
         addClassName("menu-view");
+        addClassName("padding-bottom");
         setSizeFull();
         configureGrid();
         addFilterButtons();

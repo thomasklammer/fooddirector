@@ -36,6 +36,7 @@ public class OrdersView extends Div {
 
         VerticalLayout layout = new VerticalLayout();
         layout.setClassName("custom-span");
+        addClassName("padding-bottom");
         layout.setSpacing(false);
 
         var currentUser = userService.getCurrentUser();
