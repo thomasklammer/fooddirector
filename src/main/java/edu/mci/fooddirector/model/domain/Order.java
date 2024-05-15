@@ -38,6 +38,13 @@ public class Order extends AbstractEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
+    public double getOrderValue() {
+        double sumNetValue = 0;
+        for (OrderDetail item : orderDetails) {
+            sumNetValue += item.getNetValue();
+        }
+        return sumNetValue;
+    }
 
     public LocalDateTime getOrderDate() {
         return orderDate;

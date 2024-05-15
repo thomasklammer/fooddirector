@@ -16,7 +16,9 @@ public class ArticleService {
     }
 
     public Optional<Article> findFirst() {
-        return articleRepository.findById(1L);
+       var articles = articleRepository.findAll();
+
+       return articles.stream().findFirst();
     }
 
     public void saveArticle(Article article) {

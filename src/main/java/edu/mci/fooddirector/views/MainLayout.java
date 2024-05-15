@@ -6,19 +6,23 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.cart.CartView;
 import edu.mci.fooddirector.views.helloworld.HelloWorldView;
+import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
+import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
  * The main view is a top-level placeholder for other views.
  */
+@PermitAll
 public class MainLayout extends AppLayout {
 
     private H2 viewTitle;
@@ -28,6 +32,7 @@ public class MainLayout extends AppLayout {
         addDrawerContent();
         addHeaderContent();
         createFooter();
+        getStyle().set("background-color", "#FBF7EF");
     }
 
     private void addHeaderContent() {
@@ -45,8 +50,18 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
         Header header = new Header(appName);
 
-        Scroller scroller = new Scroller(createNavigation());
 
+        var navigation = createNavigation();
+        var adminNavigation = createAdminNavigation();
+
+        VerticalLayout navWrapper = new VerticalLayout(navigation, adminNavigation);
+        navWrapper.setSpacing(true);
+        navWrapper.setSizeUndefined();
+        navigation.setWidthFull();
+        adminNavigation.setWidthFull();
+
+
+        Scroller scroller = new Scroller(navWrapper);
         addToDrawer(header, scroller);
     }
 
@@ -54,13 +69,40 @@ public class MainLayout extends AppLayout {
         SideNav nav = new SideNav();
         nav.addClassNames("side-nav");
 
-        //nav.addItem(new SideNavItem("Hello World", HelloWorldView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
-        nav.addItem(new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        nav.addItem(new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create()));
-        nav.addItem(new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create()));
+        nav.getElement().getStyle().set("background-color", "#FBF7EF");
+
+        String activeClass = "active-nav-item";
+
+//        SideNavItem hw = new SideNavItem("HelloWorldView", HelloWorldView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+//        hw.getElement().getClassList().add(activeClass);
+//        nav.addItem(hw);
+
+        SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        cartNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(cartNavItem);
+
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        ordersNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(ordersNavItem);
 
 
         return nav;
+    }
+
+    private SideNav createAdminNavigation() {
+        SideNav adminNav = new SideNav();
+        adminNav.setLabel("Admin");
+        adminNav.setCollapsible(true);
+
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        ordersNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(ordersNavItem);
+
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        reportNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(reportNavItem);
+
+        return adminNav;
     }
 
     private void createFooter() {

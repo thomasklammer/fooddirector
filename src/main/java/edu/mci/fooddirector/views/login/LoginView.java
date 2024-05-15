@@ -1,4 +1,4 @@
-package edu.mci.fooddirector.views;
+package edu.mci.fooddirector.views.login;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -11,14 +11,16 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import jakarta.annotation.security.PermitAll;
 
 @Route("login")
-@PageTitle("Login | Vaadin CRM")
+@PageTitle("Login | Fooddirector")
 @AnonymousAllowed
+@PermitAll
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final LoginForm login = new LoginForm();
-    private final Button registerButton = new Button("Register");
+    private final Button registerButton = new Button("Registrieren");
 
     public LoginView(){
         addClassName("login-view");

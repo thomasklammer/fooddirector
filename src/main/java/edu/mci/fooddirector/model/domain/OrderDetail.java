@@ -12,7 +12,7 @@ public class OrderDetail extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    private Article articleId;
+    private Article article;
 
     @Column(name="netvalue")
     private double netValue;
@@ -35,12 +35,12 @@ public class OrderDetail extends AbstractEntity {
         this.order = order;
     }
 
-    public Article getArticleId() {
-        return articleId;
+    public Article getArticle() {
+        return article;
     }
 
-    public void setArticleId(Article articleId) {
-        this.articleId = articleId;
+    public void setArticle(Article articleId) {
+        this.article = articleId;
     }
 
     public double getNetValue() {
