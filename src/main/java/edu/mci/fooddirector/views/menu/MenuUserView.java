@@ -3,11 +3,9 @@ package edu.mci.fooddirector.views.menu;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -23,8 +21,6 @@ import edu.mci.fooddirector.model.services.NotificationService;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
-import com.vaadin.flow.component.notification.Notification;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Span;
 
@@ -99,7 +95,7 @@ public class MenuUserView extends VerticalLayout {
         specialsLayout.setPadding(true);
 
         for (Article offer : dailyOffers) {
-            specialsLayout.add(createSpecial(offer.getName() + " - " + offer.getDescription(), offer.getNetPrice(), "path/to/image.jpg")); // Adjust image path accordingly
+            specialsLayout.add(createSpecial(offer.getName() + " - " + offer.getDescription(), offer.getGrossPriceDiscounted(), "path/to/image.jpg")); // Adjust image path accordingly
         }
 
         return specialsLayout;

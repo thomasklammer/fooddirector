@@ -40,6 +40,9 @@ public class Article extends AbstractEntity {
     @Column(name="discount")
     private double discount;
 
+    @Column(name="isdeleted")
+    private boolean isDeleted;
+
     public String getName() {
         return name;
     }
@@ -118,5 +121,13 @@ public class Article extends AbstractEntity {
 
     public void setDiscount(double discount) {
         this.discount = discount;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

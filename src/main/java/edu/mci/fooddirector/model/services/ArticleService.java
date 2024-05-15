@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -17,17 +18,21 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Optional<Article> findFirst() {
-       var articles = articleRepository.findAll();
-
-       return articles.stream().findFirst();
-    }
 
     public void saveArticle(Article article) {
         articleRepository.save(article);
     }
 
     public List<Article> findAll() {
-        return articleRepository.findAll();
+
+        return articleRepository.findAll().stream()
+                .filter(x -> !x.isDeleted())
+                .collect(Collectors.toList());
     }
+
+    public void deleteArticle(Article article) {
+        article.setDeleted(true);
+        articleRepository.save(article);
+    }
+
 }

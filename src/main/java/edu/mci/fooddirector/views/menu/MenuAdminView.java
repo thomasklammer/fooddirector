@@ -54,7 +54,7 @@ public class MenuAdminView extends VerticalLayout {
         Button addArticleButton = new Button("Neuen Artikel anlegen", e -> openEditDialog(dummyArticle));
         addArticleButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Grid<Article> articleGrid = createArticleGrid();
+
         setSizeFull();
         configureGrid();
         updateList();
@@ -80,13 +80,29 @@ public class MenuAdminView extends VerticalLayout {
         grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
         grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getDiscount())).setHeader("Rabatt");
 
-        grid.addComponentColumn(article -> createEditButton(article)).setHeader("Aktionen");
+        grid.addComponentColumn(article -> createButtons(article)).setHeader("Aktionen");
+
     }
 
-    private Grid<Article> createArticleGrid() {
-        Grid<Article> grid = new Grid<>(Article.class);
-        configureGrid();
-        return grid;
+    private HorizontalLayout createButtons(Article article) {
+        return new HorizontalLayout(createEditButton(article), createDeleteButton(article));
+    }
+
+
+    private Button createDeleteButton(Article article) {
+        Button editButton = new Button("Löschen", e -> {
+
+            try {
+                articleService.deleteArticle(article);
+                updateList();
+            }
+            catch(Exception ex) {
+                notificationService.showError("Löschen des Artikels fehlgeschlagen");
+            }
+
+        });
+        editButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        return editButton;
     }
 
 
