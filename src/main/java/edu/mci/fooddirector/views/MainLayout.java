@@ -11,6 +11,9 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.views.cart.CartView;
+import edu.mci.fooddirector.views.helloworld.HelloWorldView;
+import edu.mci.fooddirector.views.menu.MenuAdminView;
+import edu.mci.fooddirector.views.menu.MenuUserView;
 import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
@@ -78,6 +81,10 @@ public class MainLayout extends AppLayout {
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
 
+        SideNavItem menuNavItem = new SideNavItem("Speisekarte", MenuUserView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        menuNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(menuNavItem);
+
 
         return nav;
     }
@@ -95,6 +102,9 @@ public class MainLayout extends AppLayout {
         reportNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(reportNavItem);
 
+        SideNavItem menuManagementNavItem = new SideNavItem("Speisekarte Management", MenuAdminView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        menuManagementNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(menuManagementNavItem);
 
         return adminNav;
     }

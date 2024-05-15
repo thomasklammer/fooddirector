@@ -48,7 +48,7 @@ public class CartService {
         }
     }
 
-    public void addCartItem(Article article) {
+    public void addCartItem(Article article, int quantity) {
         getCart(cart -> {
             var cartItem = new CartItem();
             cartItem.setArticle(article);
