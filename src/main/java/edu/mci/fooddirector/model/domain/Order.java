@@ -1,5 +1,6 @@
 package edu.mci.fooddirector.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.mci.fooddirector.model.enums.OrderStatus;
 import edu.mci.fooddirector.model.enums.PaymentMethod;
 import jakarta.persistence.*;
@@ -38,12 +39,13 @@ public class Order extends AbstractEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
+    @JsonIgnore
     public double getOrderValue() {
-        double sumNetValue = 0;
+        double sum = 0;
         for (OrderDetail item : orderDetails) {
-            sumNetValue += item.getNetValue();
+            sum += item.getTotalGrossValue();
         }
-        return sumNetValue;
+        return sum;
     }
 
     public LocalDateTime getOrderDate() {

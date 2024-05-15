@@ -4,6 +4,8 @@ import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.repositories.ArticleRepository;
 import org.springframework.stereotype.Service;
 
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,5 +27,7 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-
+    public List<Article> findAll() {
+        return articleRepository.findAll();
+    }
 }

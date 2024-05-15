@@ -1,6 +1,5 @@
 package edu.mci.fooddirector.views.orders;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -15,14 +14,15 @@ import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.enums.OrderStatus;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
-
+import jakarta.annotation.security.PermitAll;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@PageTitle("Admin Bestellungen")
+@PageTitle("Admin Bestellungen | Fooddirector")
 @Route(value = "Adminorders", layout = MainLayout.class)
+@PermitAll
 public class AdminOrdersView extends Div {
 
     private static final Logger LOGGER = Logger.getLogger(AdminOrdersView.class.getName());
@@ -30,6 +30,7 @@ public class AdminOrdersView extends Div {
     public AdminOrdersView(OrderService orderService) {
         VerticalLayout layout = new VerticalLayout();
         layout.setClassName("custom-span");
+        addClassName("padding-bottom");
         layout.setSpacing(false);
 
         List<Order> orders = orderService.findAll();

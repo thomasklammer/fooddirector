@@ -1,5 +1,6 @@
 package edu.mci.fooddirector.model.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
@@ -73,5 +74,20 @@ public class OrderDetail extends AbstractEntity {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    @JsonIgnore
+    public double getTax() {
+        return getNetValue() * getTaxRate() / 100;
+    }
+
+    @JsonIgnore
+    public double getGrossValue() {
+        return getNetValue() + getTax();
+    }
+
+    @JsonIgnore
+    public double getTotalGrossValue() {
+        return getGrossValue() * getAmount();
     }
 }

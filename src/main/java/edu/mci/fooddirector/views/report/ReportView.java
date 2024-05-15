@@ -1,6 +1,5 @@
 package edu.mci.fooddirector.views.report;
 
-import com.itextpdf.kernel.pdf.PdfDocument;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -19,9 +18,11 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.model.domain.Order;
-import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,16 +31,11 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 
 @PageTitle("Bericht | Fooddirector")
 @Route(value = "report", layout = MainLayout.class)
+@PermitAll
 public class ReportView extends VerticalLayout {
 
     public ReportView(OrderService orderService) {
@@ -128,38 +124,13 @@ public class ReportView extends VerticalLayout {
         conf.addSeries(series1);
         conf.addSeries(series2);
 
-        // Create export buttons
-        Button pdfButton = new Button("Export as PDF", event -> exportToPdf(months, monthlySales, monthlyOrders));
+        // Create export button
         Button csvButton = new Button("Export as CSV", event -> exportToCsv(months, monthlySales, monthlyOrders));
 
         // Add components to the layout
         add(header);
         add(chart);
-        add(pdfButton);
         add(csvButton);
-    }
-
-    private void exportToPdf(String[] months, Number[] values1, Number[] values2) {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PdfWriter writer = new PdfWriter(outputStream);
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-
-            document.add(new Paragraph("Monatsbericht"));
-            for (int i = 0; i < months.length; i++) {
-                document.add(new Paragraph(months[i] + ": €" + values1[i].toString() + ", Bestellungen: " + values2[i].toString()));
-            }
-
-            document.close();
-
-            StreamResource resource = new StreamResource("report.pdf", () -> new ByteArrayInputStream(outputStream.toByteArray()));
-            Anchor downloadLink = new Anchor(resource, "Download PDF");
-            downloadLink.getElement().setAttribute("download", true);
-            add(downloadLink);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void exportToCsv(String[] months, Number[] values1, Number[] values2) {

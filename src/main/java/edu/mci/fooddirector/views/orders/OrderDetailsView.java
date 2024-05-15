@@ -15,12 +15,14 @@ import com.vaadin.flow.router.Route;
 import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
+import edu.mci.fooddirector.util.DateTimeToStringConverter;
+import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
+import jakarta.annotation.security.PermitAll;
 
-import java.time.format.DateTimeFormatter;
-
-@PageTitle("Bestelldetails")
+@PageTitle("Bestelldetails | Fooddirector")
 @Route(value = "order-details/:id", layout = MainLayout.class)
+@PermitAll
 public class OrderDetailsView extends Div implements BeforeEnterObserver {
 
     private final VerticalLayout layout;
@@ -46,18 +48,17 @@ public class OrderDetailsView extends Div implements BeforeEnterObserver {
                 layout.removeAll();
                 addBackButton();
                 layout.add(new H3("Bestellung Nr. " + selectedOrder.getId()));
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                layout.add(new Span("Bestelldatum: " + selectedOrder.getOrderDate().format(formatter)));
+                layout.add(new Span("Bestelldatum: " + DateTimeToStringConverter.convert(selectedOrder.getOrderDate())));
                 layout.add(new Span("Lieferadresse: " + selectedOrder.getDeliveryAddress().getCity() + " " + selectedOrder.getDeliveryAddress().getStreet() + " " + selectedOrder.getDeliveryAddress().getHouseNumber()));
                 layout.add(new Span("Bezahlmethode: " + selectedOrder.getPaymentMethod()));
-                layout.add(new Span ("Gesamtsumme: " +  "€ " +selectedOrder.getOrderValue()));
+                layout.add(new Span ("Gesamtsumme: " +  DoubleToStringConverter.convertToCurrency(selectedOrder.getOrderValue())));
 
                 Grid<OrderDetail> grid = new Grid<>();
                 grid.setItems(selectedOrder.getOrderDetails());
                 grid.addColumn(orderDetail -> orderDetail.getArticle().getName()).setHeader("Artikel").setSortable(true);
                 grid.addColumn(OrderDetail::getAmount).setHeader("Menge").setSortable(true);
-                grid.addColumn(orderDetail -> orderDetail.getTaxRate() + " %").setHeader("Tax Rate").setSortable(true);
-                grid.addColumn(orderDetail -> "€ " + orderDetail.getNetValue()).setHeader("Net Value").setSortable(true);
+                grid.addColumn(orderDetail ->  DoubleToStringConverter.convertToPercentage(orderDetail.getTaxRate())).setHeader("Steuer").setSortable(true);
+                grid.addColumn(orderDetail -> DoubleToStringConverter.convertToCurrency(orderDetail.getTotalGrossValue())).setHeader("Gesamtbetrag").setSortable(true);
                 grid.addColumn(OrderDetail::getNote).setHeader("Anmerkung").setSortable(true);
                 layout.add(grid);
 
