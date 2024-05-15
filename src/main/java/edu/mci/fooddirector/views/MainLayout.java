@@ -1,11 +1,9 @@
-
 package edu.mci.fooddirector.views;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.map.configuration.style.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
@@ -14,18 +12,15 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.security.SecurityService;
 import edu.mci.fooddirector.views.cart.CartView;
-import edu.mci.fooddirector.views.helloworld.HelloWorldView;
 import edu.mci.fooddirector.views.menu.MenuAdminView;
 import edu.mci.fooddirector.views.menu.MenuUserView;
 import edu.mci.fooddirector.views.orders.AdminOrdersView;
 import edu.mci.fooddirector.views.orders.OrdersView;
 import edu.mci.fooddirector.views.report.ReportView;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
@@ -35,15 +30,19 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
+    private final UserService userService;
     private H2 viewTitle;
     private Footer footer;
 
-    public MainLayout(SecurityService securityService) {
+    public MainLayout(SecurityService securityService, UserService userService) {
         this.securityService = securityService;
+        this.userService = userService;
         setPrimarySection(Section.DRAWER);
-        addDrawerContent();
+
         addHeaderContent();
+        addDrawerContent();
         createFooter();
+
         getStyle().set("background-color", "#FBF7EF");
     }
 
@@ -54,30 +53,43 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        Button logout = new Button("Log out", e ->securityService.logout());
+        Button logout = new Button("Logout", e -> securityService.logout());
 
-        addToNavbar(true, toggle, viewTitle, logout);
-        addToNavbar(true, toggle, viewTitle);
+
+        H1 logo = new H1("Fooddirector - Gruppe 5");
+        var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
+
+        header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        header.expand(logo); // <4>
+        header.setWidthFull();
+        header.addClassNames(LumoUtility.Padding.Vertical.NONE, LumoUtility.Padding.Horizontal.MEDIUM);
+
+        addToNavbar(header);
 
         toggle.addClickListener(event -> updateFooterPosition());
     }
 
     private void addDrawerContent() {
-        H1 appName = new H1("Fooddirector");
-        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
-        Header header = new Header(appName);
-
         var navigation = createNavigation();
-        var adminNavigation = createAdminNavigation();
 
-        VerticalLayout navWrapper = new VerticalLayout(navigation, adminNavigation);
+        var currentUser = userService.getCurrentUser();
+
+        VerticalLayout navWrapper;
+        if (currentUser.isPresent() && currentUser.get().isAdmin()) {
+            var adminNavigation = createAdminNavigation();
+            adminNavigation.setWidthFull();
+            navWrapper = new VerticalLayout(navigation, adminNavigation);
+        } else {
+            navWrapper = new VerticalLayout(navigation);
+        }
+
         navWrapper.setSpacing(true);
         navWrapper.setSizeUndefined();
         navigation.setWidthFull();
-        adminNavigation.setWidthFull();
+
 
         Scroller scroller = new Scroller(navWrapper);
-        addToDrawer(header, scroller);
+        addToDrawer(scroller);
     }
 
     private SideNav createNavigation() {
@@ -89,36 +101,39 @@ public class MainLayout extends AppLayout {
         String activeClass = "active-nav-item";
 
 
+        SideNavItem menuNavItem = new SideNavItem("Speisekarte", MenuUserView.class, LineAwesomeIcon.UTENSILS_SOLID.create());
+        menuNavItem.getElement().getClassList().add(activeClass);
+        nav.addItem(menuNavItem);
+
         SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
         cartNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(cartNavItem);
 
-        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.FOLDER_SOLID.create());
         ordersNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(ordersNavItem);
 
-        SideNavItem menuNavItem = new SideNavItem("Speisekarte", MenuUserView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
-        menuNavItem.getElement().getClassList().add(activeClass);
-        nav.addItem(menuNavItem);
-      
+
         return nav;
     }
-      private SideNav createAdminNavigation() {
+
+    private SideNav createAdminNavigation() {
         SideNav adminNav = new SideNav();
         adminNav.setLabel("Admin");
         adminNav.setCollapsible(true);
 
-        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", AdminOrdersView.class, LineAwesomeIcon.FOLDER_SOLID.create());
         ordersNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(ordersNavItem);
 
-        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.PASTE_SOLID.create());
-        reportNavItem.getElement().getClassList().add("active-nav-item");
-        adminNav.addItem(reportNavItem);
 
-        SideNavItem menuManagementNavItem = new SideNavItem("Speisekarte Management", MenuAdminView.class, LineAwesomeIcon.PASTE_SOLID.create());
+        SideNavItem menuManagementNavItem = new SideNavItem("Speisekarte Management", MenuAdminView.class, LineAwesomeIcon.UTENSILS_SOLID.create());
         menuManagementNavItem.getElement().getClassList().add("active-nav-item");
         adminNav.addItem(menuManagementNavItem);
+
+        SideNavItem reportNavItem = new SideNavItem("Bericht", ReportView.class, LineAwesomeIcon.CHART_PIE_SOLID.create());
+        reportNavItem.getElement().getClassList().add("active-nav-item");
+        adminNav.addItem(reportNavItem);
 
         return adminNav;
     }
@@ -163,4 +178,5 @@ public class MainLayout extends AppLayout {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
+
 }

@@ -126,9 +126,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <!-- iText PDF dependency -->
-
-
         <!-- Apache Commons CSV dependency -->
         <dependency>
             <groupId>org.apache.commons</groupId>

@@ -35,4 +35,14 @@ public class NotificationService {
         notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         notification.open();
     }
+
+    public void showSuccess(String message) {
+        Notification notification = new Notification(
+                message,
+                3000,
+                Notification.Position.BOTTOM_END
+        );
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.open();
+    }
 }

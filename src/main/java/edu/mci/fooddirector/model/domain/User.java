@@ -8,6 +8,9 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name="tbUsers")
 public class User extends AbstractEntity {
+    public User() {
+        setDeliveryAddress(new Address());
+    }
 
     @Email
     @NotEmpty

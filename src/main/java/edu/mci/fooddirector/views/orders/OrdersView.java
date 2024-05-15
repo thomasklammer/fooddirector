@@ -5,28 +5,21 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.selection.SingleSelect;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import edu.mci.fooddirector.model.domain.OrderDetail;
-import edu.mci.fooddirector.model.domain.User;
-import edu.mci.fooddirector.model.domain.Address;
 import edu.mci.fooddirector.model.domain.Order;
-import edu.mci.fooddirector.model.enums.OrderStatus;
-import edu.mci.fooddirector.model.enums.PaymentMethod;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.model.services.UserService;
+import edu.mci.fooddirector.util.DateTimeToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 
 
 
-@PageTitle("Bestellungen")
+@PageTitle("Bestellungen | Fooddirector")
 @Route(value = "orders", layout = MainLayout.class)
 @PermitAll
 public class OrdersView extends Div {
@@ -36,6 +29,7 @@ public class OrdersView extends Div {
 
         VerticalLayout layout = new VerticalLayout();
         layout.setClassName("custom-span");
+        addClassName("padding-bottom");
         layout.setSpacing(false);
 
         var currentUser = userService.getCurrentUser();
@@ -44,7 +38,7 @@ public class OrdersView extends Div {
         Grid<Order> grid = new Grid<>();
         grid.setItems(orders);
         grid.addColumn(Order::getId).setHeader("ID").setSortable(true);
-        grid.addColumn(order -> order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).setHeader("Bestelldatum").setSortable(true);
+        grid.addColumn(order -> DateTimeToStringConverter.convert(order.getOrderDate())).setHeader("Bestelldatum").setSortable(true);
         grid.addColumn(order -> {
             StringBuilder articleNames = new StringBuilder();
             for (OrderDetail orderDetail : order.getOrderDetails()) {

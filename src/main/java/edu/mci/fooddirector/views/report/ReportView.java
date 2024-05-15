@@ -1,6 +1,5 @@
 package edu.mci.fooddirector.views.report;
 
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -19,7 +18,6 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.model.domain.Order;
-import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
@@ -126,14 +124,12 @@ public class ReportView extends VerticalLayout {
         conf.addSeries(series1);
         conf.addSeries(series2);
 
-        // Create export buttons
 
         Button csvButton = new Button("Export as CSV", event -> exportToCsv(months, monthlySales, monthlyOrders));
 
         // Add components to the layout
         add(header);
         add(chart);
-
         add(csvButton);
     }
 

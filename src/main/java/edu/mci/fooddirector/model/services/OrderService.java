@@ -10,11 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private static final Logger LOGGER = Logger.getLogger(OrderService.class.getName());
 
     public OrderService(OrderRepository orderRepository,
                         OrderDetailRepository orderDetailRepository) {
@@ -35,10 +38,12 @@ public class OrderService {
         return orderRepository.findByMonthAndYear(month, year);
     }
 
-
-
     public void saveOrder(Order order) {
-        orderRepository.save(order);
+        try {
+            orderRepository.save(order);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save order", e);
+        }
     }
 
     @Transactional

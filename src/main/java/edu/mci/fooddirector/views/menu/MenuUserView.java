@@ -12,13 +12,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.ArticleService;
 import edu.mci.fooddirector.model.services.CartService;
+import edu.mci.fooddirector.model.services.NotificationService;
+import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.component.notification.Notification;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Span;
 
@@ -28,22 +32,27 @@ import java.util.stream.Collectors;
 
 
 @Route(value = "menu", layout = MainLayout.class)
-@PageTitle("Speisekarte")
+@PageTitle("Speisekarte | Fooddirector")
+@RouteAlias(value = "", layout = MainLayout.class)
 @PermitAll
 public class MenuUserView extends VerticalLayout {
 
     private final ArticleService articleService;
     private final CartService cartService;
-    private Grid<Article> grid = new Grid<>(Article.class);
-
-
+    private final NotificationService notificationService;
+    private final Grid<Article> grid = new Grid<>(Article.class);
 
     private VerticalLayout categoryFilters;
 
-    public MenuUserView(ArticleService articleService, CartService cartService) {
+
+    public MenuUserView(ArticleService articleService,
+                        CartService cartService,
+                        NotificationService notificationService) {
+
         this.articleService = articleService;
         this.cartService = cartService;
         addClassName("menu-view");
+        addClassName("padding-bottom");
         setSizeFull();
 
         categoryFilters = createCategoryFilters(); // Ensure this is initialized first
@@ -52,6 +61,7 @@ public class MenuUserView extends VerticalLayout {
 
         configureGrid();
         updateList();
+
 
         HorizontalLayout mainLayout = new HorizontalLayout(categoryFilters, grid);
         mainLayout.setSizeFull();
@@ -87,6 +97,9 @@ public class MenuUserView extends VerticalLayout {
         }
 
         return specialsLayout;
+
+        add(grid);
+        this.notificationService = notificationService;
     }
 
 
@@ -140,9 +153,13 @@ public class MenuUserView extends VerticalLayout {
         grid.setHeight("auto");
         grid.addColumn(Article::getName).setHeader("Artikel");
         grid.addColumn(Article::getDescription).setHeader("Beschreibung");
+
         grid.addColumn(Article::getNetPrice).setHeader("Preis").setAutoWidth(true);
         grid.addComponentColumn(this::createAddToCartComponent).setHeader("Anzahl").setAutoWidth((true));
         grid.getStyle().set("border", "none");
+
+        grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getGrossPriceDiscounted())).setHeader("Preis").setAutoWidth(true);
+        grid.addComponentColumn(this::createAddToCartComponent).setHeader("");
     }
 
 
@@ -215,7 +232,7 @@ public class MenuUserView extends VerticalLayout {
     }
     private void addToCart(Article article, int quantity) {
         cartService.addCartItem(article, quantity);
-        Notification.show(quantity + " " + article.getName() + "(s) zum Warenkorb hinzugefügt");
+        notificationService.showInfo(quantity + " " + article.getName() + "(s) zum Warenkorb hinzugefügt");
     }
 
 

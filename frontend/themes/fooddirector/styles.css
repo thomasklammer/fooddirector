@@ -2,3 +2,8 @@
 @import url('./cart.css');
 @import url('./order-layout.css');
 @import url('./menu-layout.css');
+
+.padding-bottom {
+    padding-bottom: 100px;
+}
+
