@@ -34,14 +34,12 @@ jobs:
                 destination: reports   
          
     build_push_image_gcr:
-
         description: Build docker image and push to gcr registry
         executor: gcp-gcr/default
         machine:
           image: ubuntu-2004:202010-01
         steps:
           - checkout
-          
           - run:
               name: Build app binary and Docker image
               command: |
@@ -49,10 +47,12 @@ jobs:
                 echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
                 echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
                 echo 'export TAG=$CIRCLE_SHA1' >> $BASH_ENV
-                echo ${GCP_PROJECT_KEY} >> $BASH_ENV
-          
+                echo ${GCP_POSTGRESQL_DATABASE} >> $BASH_ENV
+                echo ${GCP_POSTGRESQL_INSTANCENAME} >> $BASH_ENV
+                echo ${GCP_POSTGRESQL_USERNAME} >> $BASH_ENV
+                echo ${GCP_POSTGRESQL_PASSWORD} >> $BASH_ENV
           - gcp-gcr/gcr-auth
-          
+
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
               google-project-id: GOOGLE_PROJECT_ID
