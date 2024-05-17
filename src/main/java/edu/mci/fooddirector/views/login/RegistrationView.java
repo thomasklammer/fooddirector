@@ -26,7 +26,6 @@ public class RegistrationView extends VerticalLayout {
         addClassName("registration-view");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
-        setJustifyContentMode(JustifyContentMode.CENTER);
 
         H1 title = new H1("Registrierung");
 
