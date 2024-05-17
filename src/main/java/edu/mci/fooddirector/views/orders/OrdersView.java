@@ -12,6 +12,7 @@ import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.util.DateTimeToStringConverter;
+import edu.mci.fooddirector.util.OrderStatusToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
@@ -56,7 +57,7 @@ public class OrdersView extends Div {
                 .setHeader("Artikel")
                 .setSortable(true)
                 .setAutoWidth(true);
-        grid.addColumn(Order::getOrderStatus)
+        grid.addColumn(x -> OrderStatusToStringConverter.convert(x.getOrderStatus()))
                 .setHeader("Status")
                 .setSortable(true)
                 .setAutoWidth(true);

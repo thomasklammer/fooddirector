@@ -17,6 +17,7 @@ import edu.mci.fooddirector.model.enums.OrderStatus;
 import edu.mci.fooddirector.model.services.NotificationService;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.util.DateTimeToStringConverter;
+import edu.mci.fooddirector.util.OrderStatusToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
@@ -64,7 +65,7 @@ public class AdminOrdersView extends Div {
                 .setSortable(true)
                 .setAutoWidth(true);
 
-        grid.addColumn(order -> order.getOrderStatus().toString())
+        grid.addColumn(order -> OrderStatusToStringConverter.convert(order.getOrderStatus()))
                 .setHeader("Status")
                 .setSortable(true)
                 .setAutoWidth(true);
