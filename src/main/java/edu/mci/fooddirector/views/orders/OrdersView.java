@@ -19,7 +19,7 @@ import java.util.List;
 
 
 
-@PageTitle("Bestellungen | Fooddirector")
+@PageTitle("Meine Bestellungen | Fooddirector")
 @Route(value = "orders", layout = MainLayout.class)
 @PermitAll
 public class OrdersView extends Div {
@@ -37,8 +37,12 @@ public class OrdersView extends Div {
 
         Grid<Order> grid = new Grid<>();
         grid.setItems(orders);
-        grid.addColumn(Order::getId).setHeader("ID").setSortable(true);
-        grid.addColumn(order -> DateTimeToStringConverter.convert(order.getOrderDate())).setHeader("Bestelldatum").setSortable(true);
+        grid.addColumn(Order::getId).setHeader("ID")
+                .setSortable(true)
+                .setAutoWidth(true);
+        grid.addColumn(order -> DateTimeToStringConverter.convert(order.getOrderDate())).setHeader("Bestelldatum")
+                .setSortable(true)
+                .setAutoWidth(true);
         grid.addColumn(order -> {
             StringBuilder articleNames = new StringBuilder();
             for (OrderDetail orderDetail : order.getOrderDetails()) {
@@ -48,8 +52,14 @@ public class OrdersView extends Div {
                 articleNames.delete(articleNames.length() - 2, articleNames.length());
             }
             return articleNames.toString();
-        }).setHeader("Artikel").setSortable(true);
-        grid.addColumn(Order::getOrderStatus).setHeader("Status").setSortable(true);
+        })
+                .setHeader("Artikel")
+                .setSortable(true)
+                .setAutoWidth(true);
+        grid.addColumn(Order::getOrderStatus)
+                .setHeader("Status")
+                .setSortable(true)
+                .setAutoWidth(true);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
         grid.addItemClickListener(event -> {

@@ -72,15 +72,30 @@ public class MenuAdminView extends VerticalLayout {
     private void configureGrid() {
         grid.removeAllColumns();
         grid.setHeight("auto");
-        grid.addColumn(Article::getName).setHeader("Name");
-        grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getNetPrice())).setHeader("Nettopreis");
-        grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getTaxRate())).setHeader("Steuer");
-        grid.addColumn(Article::getDescription).setHeader("Beschreibung");
-        grid.addColumn(article -> ArticleCategoryToStringConverter.convert(article.getArticleCategory())).setHeader("Kategorie");
-        grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein").setHeader("Tagesangebot");
-        grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getDiscount())).setHeader("Rabatt");
 
-        grid.addComponentColumn(this::createButtons).setHeader("Aktionen");
+        grid.addColumn(Article::getName)
+                .setHeader("Name")
+                .setAutoWidth(true);
+        grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getNetPrice()))
+                .setHeader("Nettopreis")
+                .setAutoWidth(true);
+        grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getTaxRate()))
+                .setHeader("Steuer")
+                .setAutoWidth(true);
+        grid.addColumn(Article::getDescription).setHeader("Beschreibung")
+                .setAutoWidth(true);
+        grid.addColumn(article -> ArticleCategoryToStringConverter.convert(article.getArticleCategory()))
+                .setHeader("Kategorie")
+                .setAutoWidth(true);
+        grid.addColumn(article -> article.isDailyOffer() ? "Ja" : "Nein")
+                .setHeader("Tagesangebot")
+                .setAutoWidth(true);
+        grid.addColumn(x -> DoubleToStringConverter.convertToPercentage(x.getDiscount()))
+                .setHeader("Rabatt")
+                .setAutoWidth(true);
+
+        grid.addComponentColumn(this::createButtons).setHeader("Aktionen")
+                .setAutoWidth(true);
 
     }
 

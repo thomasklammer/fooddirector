@@ -43,8 +43,14 @@ public class AdminOrdersView extends Div {
 
         grid = new Grid<>();
         grid.setItems(orders);
-        grid.addColumn(Order::getId).setHeader("ID").setSortable(true);
-        grid.addColumn(order -> DateTimeToStringConverter.convert(order.getOrderDate())).setHeader("Bestelldatum").setSortable(true);
+        grid.addColumn(Order::getId)
+                .setHeader("ID")
+                .setSortable(true)
+                .setAutoWidth(true);
+        grid.addColumn(order -> DateTimeToStringConverter.convert(order.getOrderDate()))
+                .setHeader("Bestelldatum")
+                .setSortable(true)
+                .setAutoWidth(true);
         grid.addColumn(order -> {
             StringBuilder articleNames = new StringBuilder();
             for (OrderDetail orderDetail : order.getOrderDetails()) {
@@ -54,10 +60,17 @@ public class AdminOrdersView extends Div {
                 articleNames.delete(articleNames.length() - 2, articleNames.length());
             }
             return articleNames.toString();
-        }).setHeader("Artikel").setSortable(true);
+        }).setHeader("Artikel")
+                .setSortable(true)
+                .setAutoWidth(true);
 
-        grid.addColumn(order -> order.getOrderStatus().toString()).setHeader("Status").setSortable(true);
-        grid.addComponentColumn(this::createEditButton).setHeader("Aktionen");
+        grid.addColumn(order -> order.getOrderStatus().toString())
+                .setHeader("Status")
+                .setSortable(true)
+                .setAutoWidth(true);
+        grid.addComponentColumn(this::createEditButton)
+                .setHeader("Aktionen")
+                .setAutoWidth(true);
 
 
         layout.add(grid);

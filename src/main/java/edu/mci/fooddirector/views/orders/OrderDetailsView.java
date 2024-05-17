@@ -17,6 +17,7 @@ import edu.mci.fooddirector.model.domain.OrderDetail;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.util.DateTimeToStringConverter;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
+import edu.mci.fooddirector.util.PaymentMethodToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 
@@ -50,16 +51,31 @@ public class OrderDetailsView extends Div implements BeforeEnterObserver {
                 layout.add(new H3("Bestellung Nr. " + selectedOrder.getId()));
                 layout.add(new Span("Bestelldatum: " + DateTimeToStringConverter.convert(selectedOrder.getOrderDate())));
                 layout.add(new Span("Lieferadresse: " + selectedOrder.getDeliveryAddress().getCity() + " " + selectedOrder.getDeliveryAddress().getStreet() + " " + selectedOrder.getDeliveryAddress().getHouseNumber()));
-                layout.add(new Span("Bezahlmethode: " + selectedOrder.getPaymentMethod()));
+                layout.add(new Span("Bezahlmethode: " + PaymentMethodToStringConverter.convert(selectedOrder.getPaymentMethod())));
                 layout.add(new Span ("Gesamtsumme: " +  DoubleToStringConverter.convertToCurrency(selectedOrder.getOrderValue())));
 
                 Grid<OrderDetail> grid = new Grid<>();
                 grid.setItems(selectedOrder.getOrderDetails());
-                grid.addColumn(orderDetail -> orderDetail.getArticle().getName()).setHeader("Artikel").setSortable(true);
-                grid.addColumn(OrderDetail::getAmount).setHeader("Menge").setSortable(true);
-                grid.addColumn(orderDetail ->  DoubleToStringConverter.convertToPercentage(orderDetail.getTaxRate())).setHeader("Steuer").setSortable(true);
-                grid.addColumn(orderDetail -> DoubleToStringConverter.convertToCurrency(orderDetail.getTotalGrossValue())).setHeader("Gesamtbetrag").setSortable(true);
-                grid.addColumn(OrderDetail::getNote).setHeader("Anmerkung").setSortable(true);
+                grid.addColumn(orderDetail -> orderDetail.getArticle().getName())
+                        .setHeader("Artikel")
+                        .setSortable(true)
+                        .setAutoWidth(true);
+                grid.addColumn(OrderDetail::getAmount)
+                        .setHeader("Menge")
+                        .setSortable(true)
+                        .setAutoWidth(true);
+                grid.addColumn(orderDetail ->  DoubleToStringConverter.convertToPercentage(orderDetail.getTaxRate()))
+                        .setHeader("Steuer")
+                        .setSortable(true)
+                        .setAutoWidth(true);
+                grid.addColumn(orderDetail -> DoubleToStringConverter.convertToCurrency(orderDetail.getTotalGrossValue()))
+                        .setHeader("Gesamtbetrag")
+                        .setSortable(true)
+                        .setAutoWidth(true);
+                grid.addColumn(OrderDetail::getNote)
+                        .setHeader("Anmerkung")
+                        .setSortable(true)
+                        .setAutoWidth(true);
                 layout.add(grid);
 
 
