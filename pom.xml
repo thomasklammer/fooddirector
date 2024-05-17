@@ -73,6 +73,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.google.cloud</groupId>
+                <artifactId>spring-cloud-gcp-dependencies</artifactId>
+                <version>4.1.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -178,8 +185,17 @@
                             <groupId>com.vaadin</groupId>
                             <artifactId>vaadin-dev</artifactId>
                         </exclusion>
+                        <exclusion>
+                            <groupId>com.h2database</groupId>
+                            <artifactId>h2</artifactId>
+                        </exclusion>
                     </exclusions>
                 </dependency>
+                <dependency>
+                    <groupId>com.google.cloud</groupId>
+                    <artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>
+                </dependency>
+
             </dependencies>
             <build>
                 <plugins>
@@ -196,6 +212,7 @@
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
