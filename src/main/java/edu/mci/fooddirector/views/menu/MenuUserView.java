@@ -6,12 +6,15 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
 import edu.mci.fooddirector.model.services.ArticleService;
@@ -34,7 +37,6 @@ import java.util.stream.Collectors;
 @RouteAlias(value = "", layout = MainLayout.class)
 @PermitAll
 public class MenuUserView extends VerticalLayout {
-
     private final ArticleService articleService;
     private final CartService cartService;
     private final NotificationService notificationService;
@@ -52,7 +54,7 @@ public class MenuUserView extends VerticalLayout {
         this.notificationService = notificationService;
         addClassName("menu-view");
         addClassName("padding-bottom");
-        setSizeFull();
+
 
         categoryFilters = createCategoryFilters(); // Ensure this is initialized first
         categoryFilters.setWidth("200px");
@@ -64,7 +66,8 @@ public class MenuUserView extends VerticalLayout {
 
         HorizontalLayout mainLayout = new HorizontalLayout(categoryFilters, grid);
         mainLayout.setAlignItems(FlexComponent.Alignment.STRETCH);
-        mainLayout.setSizeFull();
+        mainLayout.setWidthFull();
+        mainLayout.setHeight("500px");
         mainLayout.expand(grid);
 
         add(createHeader("Tagesangebote"));
@@ -95,19 +98,23 @@ public class MenuUserView extends VerticalLayout {
         specialsLayout.setPadding(true);
 
         for (Article offer : dailyOffers) {
-            specialsLayout.add(createSpecial(offer.getName() + " - " + offer.getDescription(), offer.getGrossPriceDiscounted())); // Adjust image path accordingly
+            specialsLayout.add(createSpecial(offer.getName() + " - " + offer.getDescription(), offer.getGrossPriceDiscounted(), offer.getImage())); // Adjust image path accordingly
         }
 
         return specialsLayout;
     }
 
 
-    private Component createSpecial(String description, double price) {
+    private Component createSpecial(String description, double price, String imageSource) {
         VerticalLayout layout = new VerticalLayout();
         layout.setAlignItems(Alignment.CENTER);
         layout.setPadding(false);
         layout.setSpacing(false);
 
+        Image image = new Image();
+        image.setSrc(imageSource);
+        image.setWidth("300px");
+        image.addClassNames("text-center", "text-md", LumoUtility.Margin.LARGE);
 
         // Description as a label
         Span descLabel = new Span(description);
@@ -118,7 +125,7 @@ public class MenuUserView extends VerticalLayout {
         priceLabel.addClassNames("text-center", "text-lg", "price-label");  // Additional class for price styling
 
         // Add components to the layout
-        layout.add(descLabel, priceLabel);
+        layout.add(image, descLabel, priceLabel);
 
         return layout;
     }
@@ -127,6 +134,7 @@ public class MenuUserView extends VerticalLayout {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         layout.setSpacing(true);
+
         layout.setWidthFull();
 
 
@@ -148,8 +156,18 @@ public class MenuUserView extends VerticalLayout {
     private void configureGrid() {
         grid.removeAllColumns();
         grid.setHeight("auto");
-        grid.addColumn(Article::getName).setHeader("Artikel").setAutoWidth(true);
-        grid.addColumn(Article::getDescription).setHeader("Beschreibung").setAutoWidth(true);
+
+        grid.addColumn(new ComponentRenderer<>(article -> {
+            Image img = new Image();
+            img.setSrc(article.getImage());
+            img.setWidth("250px");
+            return img;
+        })).setHeader("").setAutoWidth(true);
+
+        grid.addColumn(Article::getName).setHeader("Artikel")
+                .setAutoWidth(true);
+        grid.addColumn(Article::getDescription).setHeader("Beschreibung")
+                .setAutoWidth(true);
 
 
         grid.addColumn(x -> DoubleToStringConverter.convertToCurrency(x.getGrossPriceDiscounted())).setHeader("Preis").setAutoWidth(true);

@@ -167,6 +167,10 @@ public class MenuAdminView extends VerticalLayout {
         TextField discountField = new TextField("Rabatt");
         discountField.setValue(String.valueOf(article.getDiscount()));
 
+
+        TextField imageField = new TextField("Link zum Bild");
+        imageField.setValue(String.valueOf(article.getImage()));
+
         Button saveButton = new Button("Speichern", e -> {
             try {
                 article.setName(nameField.getValue());
@@ -176,6 +180,7 @@ public class MenuAdminView extends VerticalLayout {
                 article.setArticleCategory(categoryComboBox.getValue());
                 article.setDailyOffer(dailyOfferCheckbox.getValue());
                 article.setDiscount(Double.parseDouble(discountField.getValue()));
+                article.setImage(imageField.getValue());
 
                 articleService.saveArticle(article);
                 updateList();
@@ -190,7 +195,7 @@ public class MenuAdminView extends VerticalLayout {
 
         var horizontalLayout = new HorizontalLayout(saveButton, cancelButton);
 
-        formLayout.add(nameField, priceField, taxRateField, descriptionField, categoryComboBox, dailyOfferCheckbox, discountField, horizontalLayout);
+        formLayout.add(nameField, priceField, taxRateField, descriptionField, categoryComboBox, imageField, dailyOfferCheckbox, discountField, horizontalLayout);
         dialog.add(formLayout);
         dialog.open();
     }
