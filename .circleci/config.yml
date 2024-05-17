@@ -49,10 +49,6 @@ jobs:
             echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
             echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
             echo 'export TAG=$CIRCLE_SHA1' >> $BASH_ENV
-            echo 'export GCP_POSTGRESQL_DATABASE=${GCP_POSTGRESQL_DATABASE}' >> $BASH_ENV
-            echo 'export GCP_POSTGRESQL_INSTANCENAME=${GCP_POSTGRESQL_INSTANCENAME}' >> $BASH_ENV 
-            echo 'export GCP_POSTGRESQL_USERNAME=${GCP_POSTGRESQL_USERNAME}' >> $BASH_ENV 
-            echo 'export GCP_POSTGRESQL_PASSWORD=${GCP_POSTGRESQL_PASSWORD}' >> $BASH_ENV 
 
       - gcp-gcr/gcr-auth
 
