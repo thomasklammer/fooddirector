@@ -1,5 +1,6 @@
 package edu.mci.fooddirector.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -12,9 +13,11 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.services.UserService;
 import edu.mci.fooddirector.security.SecurityService;
 import edu.mci.fooddirector.views.cart.CartView;
+import edu.mci.fooddirector.views.login.LoginView;
 import edu.mci.fooddirector.views.menu.MenuAdminView;
 import edu.mci.fooddirector.views.menu.MenuUserView;
 import edu.mci.fooddirector.views.orders.AdminOrdersView;
@@ -23,6 +26,8 @@ import edu.mci.fooddirector.views.report.ReportView;
 import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
+import java.util.Optional;
+
 /**
  * The main view is a top-level placeholder for other views.
  */
@@ -30,12 +35,13 @@ import org.vaadin.lineawesome.LineAwesomeIcon;
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
-    private final UserService userService;
     private H2 viewTitle;
 
+    private final Optional<User> currentUser;
     public MainLayout(SecurityService securityService, UserService userService) {
         this.securityService = securityService;
-        this.userService = userService;
+        currentUser = userService.getCurrentUser();
+
         setPrimarySection(Section.DRAWER);
 
         addHeaderContent();
@@ -52,15 +58,8 @@ public class MainLayout extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        Button logout = new Button("Logout", e -> securityService.logout());
 
-
-        H1 logo = new H1("Fooddirector - Gruppe 5");
-        var header = new HorizontalLayout(new DrawerToggle(), logo, logout);
-
-        header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        header.expand(logo); // <4>
-        header.setWidthFull();
+        var header = createHeaderBar();
         header.addClassNames(LumoUtility.Padding.Vertical.NONE, LumoUtility.Padding.Horizontal.MEDIUM);
 
         addToNavbar(header);
@@ -68,10 +67,27 @@ public class MainLayout extends AppLayout {
         toggle.addClickListener(event -> updateFooterPosition());
     }
 
+    private HorizontalLayout createHeaderBar() {
+        Button loginLogoutButton;
+
+        if(currentUser.isEmpty()) {
+            loginLogoutButton = new Button("Login", e -> UI.getCurrent().navigate(LoginView.class));
+        } else {
+            loginLogoutButton = new Button("Logout", e -> securityService.logout());
+        }
+
+
+        H1 logo = new H1("Fooddirector - Gruppe 5");
+        var header = new HorizontalLayout(new DrawerToggle(), logo, loginLogoutButton);
+
+        header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        header.expand(logo); // <4>
+        header.setWidthFull();
+        return header;
+    }
+
     private void addDrawerContent() {
         var navigation = createNavigation();
-
-        var currentUser = userService.getCurrentUser();
 
         VerticalLayout navWrapper;
         if (currentUser.isPresent() && currentUser.get().isAdmin()) {
@@ -104,13 +120,15 @@ public class MainLayout extends AppLayout {
         menuNavItem.getElement().getClassList().add(activeClass);
         nav.addItem(menuNavItem);
 
-        SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
-        cartNavItem.getElement().getClassList().add(activeClass);
-        nav.addItem(cartNavItem);
+        if(currentUser.isPresent()) {
+            SideNavItem cartNavItem = new SideNavItem("Warenkorb", CartView.class, LineAwesomeIcon.SHOPPING_CART_SOLID.create());
+            cartNavItem.getElement().getClassList().add(activeClass);
+            nav.addItem(cartNavItem);
 
-        SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.FOLDER_SOLID.create());
-        ordersNavItem.getElement().getClassList().add(activeClass);
-        nav.addItem(ordersNavItem);
+            SideNavItem ordersNavItem = new SideNavItem("Bestellungen", OrdersView.class, LineAwesomeIcon.FOLDER_SOLID.create());
+            ordersNavItem.getElement().getClassList().add(activeClass);
+            nav.addItem(ordersNavItem);
+        }
 
 
         return nav;

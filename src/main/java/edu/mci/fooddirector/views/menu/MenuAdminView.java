@@ -19,6 +19,7 @@ import edu.mci.fooddirector.util.ArticleCategoryToStringConverter;
 import edu.mci.fooddirector.util.DoubleToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
@@ -26,7 +27,7 @@ import java.util.List;
 
 @Route(value = "admin/articles", layout = MainLayout.class)
 @PageTitle("Speisekarte Management | Fooddirector")
-@PermitAll
+@RolesAllowed("ADMIN")
 public class MenuAdminView extends VerticalLayout {
 
     private final ArticleService articleService;

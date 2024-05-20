@@ -14,11 +14,9 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import edu.mci.fooddirector.model.domain.User;
 import edu.mci.fooddirector.model.services.NotificationService;
 import edu.mci.fooddirector.model.services.UserService;
-import jakarta.annotation.security.PermitAll;
 
 @Route("register")
 @PageTitle("Registrieren | Fooddirector")
-@PermitAll
 @AnonymousAllowed
 public class RegistrationView extends VerticalLayout {
 

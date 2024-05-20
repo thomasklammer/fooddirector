@@ -82,15 +82,7 @@ public class CartView extends VerticalLayout {
         this.notificationService = notificationService;
         this.orderService = orderService;
 
-
-        var user = userService.getCurrentUser();
-
-        if (user.isEmpty()) {
-            UI.getCurrent().navigate(LoginView.class);
-            return;
-        } else {
-            currentUser = user.get();
-        }
+        currentUser = userService.getCurrentUser().get();
 
         addClassNames("cart");
         addClassName("padding-bottom");

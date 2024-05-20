@@ -14,6 +14,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import edu.mci.fooddirector.model.domain.Article;
 import edu.mci.fooddirector.model.enums.ArticleCategory;
@@ -32,10 +33,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Route(value = "menu", layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
+@RouteAlias(value = "menu", layout = MainLayout.class)
 @PageTitle("Speisekarte | Fooddirector")
-@RouteAlias(value = "", layout = MainLayout.class)
-@PermitAll
+@AnonymousAllowed
 public class MenuUserView extends VerticalLayout {
     private final ArticleService articleService;
     private final CartService cartService;
