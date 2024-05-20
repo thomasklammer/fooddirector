@@ -43,16 +43,17 @@ public class MenuAdminView extends VerticalLayout {
 
         addClassName("padding-bottom");
 
-        var dummyArticle = new Article();
-        dummyArticle.setName("");
-        dummyArticle.setTaxRate(20);
-        dummyArticle.setDescription("");
-        dummyArticle.setDailyOffer(false);
-        dummyArticle.setImage("");
-        dummyArticle.setDiscount(0);
+        Button addArticleButton = new Button("Neuen Artikel anlegen", e -> {
+            var dummyArticle = new Article();
+            dummyArticle.setName("");
+            dummyArticle.setTaxRate(20);
+            dummyArticle.setDescription("");
+            dummyArticle.setDailyOffer(false);
+            dummyArticle.setImage("");
+            dummyArticle.setDiscount(0);
 
-
-        Button addArticleButton = new Button("Neuen Artikel anlegen", e -> openEditDialog(dummyArticle));
+            openEditDialog(dummyArticle);
+        });
         addArticleButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
 
