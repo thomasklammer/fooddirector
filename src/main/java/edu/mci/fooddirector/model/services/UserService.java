@@ -32,6 +32,9 @@ public class UserService {
         }
 
         return userRepository.findByEmail(currentPrincipalName);
+    }
 
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

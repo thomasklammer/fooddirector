@@ -19,13 +19,13 @@ import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.util.DateTimeToStringConverter;
 import edu.mci.fooddirector.util.OrderStatusToStringConverter;
 import edu.mci.fooddirector.views.MainLayout;
-import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.util.List;
 
 @PageTitle("Admin Bestellungen | Fooddirector")
 @Route(value = "Adminorders", layout = MainLayout.class)
-@PermitAll
+@RolesAllowed("ADMIN")
 public class AdminOrdersView extends Div {
 
 

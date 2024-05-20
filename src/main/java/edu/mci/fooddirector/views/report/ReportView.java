@@ -21,6 +21,7 @@ import edu.mci.fooddirector.model.domain.Order;
 import edu.mci.fooddirector.model.services.OrderService;
 import edu.mci.fooddirector.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -35,7 +36,7 @@ import java.util.Locale;
 
 @PageTitle("Bericht | Fooddirector")
 @Route(value = "report", layout = MainLayout.class)
-@PermitAll
+@RolesAllowed("ADMIN")
 public class ReportView extends VerticalLayout {
 
     public ReportView(OrderService orderService) {

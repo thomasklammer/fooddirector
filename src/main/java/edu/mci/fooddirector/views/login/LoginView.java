@@ -11,12 +11,10 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import jakarta.annotation.security.PermitAll;
 
 @Route("login")
 @PageTitle("Login | Fooddirector")
 @AnonymousAllowed
-@PermitAll
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final LoginForm login = new LoginForm();
@@ -37,8 +35,10 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         add(new H1("Fooddirector"), login, new HorizontalLayout(registerButton));
     }
 
+
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        // inform the user about an authentication error
         if(beforeEnterEvent.getLocation()
                 .getQueryParameters()
                 .getParameters()
